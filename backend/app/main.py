@@ -1,3 +1,4 @@
+import os
 from fastapi import FastAPI
 from fastapi.staticfiles import StaticFiles
 from app.api.v1.api import api_router
@@ -19,6 +20,9 @@ UPLOAD_DIR.mkdir(exist_ok=True)
 app.mount("/uploads", StaticFiles(directory="uploads"), name="uploads")
 
 # CORS Middleware
+# Get allowed origins from environment variable or use defaults
+ALLOWED_ORIGINS = os.getenv("ALLOWED_ORIGINS", "").split(",") if os.getenv("ALLOWED_ORIGINS") else []
+
 origins = [
     "http://localhost:8080",  # Vite frontend URL
     "http://127.0.0.1:8080",
@@ -28,7 +32,12 @@ origins = [
     "http://127.0.0.1:8082",
     "http://localhost:5173",  # Fallback
     "http://127.0.0.1:5173",
+    "https://i-intern.com",   # Production frontend URL
+    "http://i-intern.com",    # In case HTTP is used
 ]
+
+# Add environment-specified origins
+origins.extend(ALLOWED_ORIGINS)
 
 app.add_middleware(
     CORSMiddleware,
