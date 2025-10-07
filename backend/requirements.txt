@@ -3,12 +3,12 @@ uvicorn[standard]==0.24.0
 weasyprint==60.2
 pydyf==0.10.0
 jinja2==3.1.2
-pydantic[email]
+pydantic[email]==2.5.2  
 python-multipart==0.0.6
 sqlalchemy
 passlib[bcrypt]
 python-jose[cryptography]
 psycopg2-binary
 argon2-cffi
-pydantic-settings
+pydantic-settings==2.1.0
 
