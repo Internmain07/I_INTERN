@@ -34,22 +34,25 @@ origins = [
     "http://127.0.0.1:8081",
     "http://localhost:8082",  # Alternative port
     "http://127.0.0.1:8082",
-    "https://i-intern.com",   # Production frontend URL
+    "https://i-intern.com",   # Production frontend URL - THIS IS YOUR ACTUAL DOMAIN
     "http://i-intern.com",    # In case HTTP is used
-    "https://your-frontend-domain.vercel.app",  # Add your actual frontend deployment URL
-    "*"  # Allow all origins for development (remove in production)
+    "https://www.i-intern.com",  # With www subdomain
+    "http://www.i-intern.com",   # With www subdomain HTTP
 ]
 
 # Add environment-specified origins
 if ALLOWED_ORIGINS:
     origins.extend(ALLOWED_ORIGINS)
 
+# IMPORTANT: Cannot use allow_origins=["*"] with allow_credentials=True
+# Must specify exact origins when using credentials
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"],  # Allow all origins for development
+    allow_origins=origins,  # Use the specific origins list
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
+    expose_headers=["*"],  # Also expose all headers
 )
 
 app.include_router(api_router, prefix="/api/v1")
