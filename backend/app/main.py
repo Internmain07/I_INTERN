@@ -24,24 +24,29 @@ app.mount("/uploads", StaticFiles(directory="uploads"), name="uploads")
 ALLOWED_ORIGINS = os.getenv("ALLOWED_ORIGINS", "").split(",") if os.getenv("ALLOWED_ORIGINS") else []
 
 origins = [
-    "http://localhost:8080",  # Vite frontend URL
+    "http://localhost:3000",  # React development server
+    "http://127.0.0.1:3000",
+    "http://localhost:5173",  # Vite development server
+    "http://127.0.0.1:5173",
+    "http://localhost:8080",  # Alternative port
     "http://127.0.0.1:8080",
     "http://localhost:8081",  # Alternative port
     "http://127.0.0.1:8081",
     "http://localhost:8082",  # Alternative port
     "http://127.0.0.1:8082",
-    "http://localhost:5173",  # Fallback
-    "http://127.0.0.1:5173",
     "https://i-intern.com",   # Production frontend URL
     "http://i-intern.com",    # In case HTTP is used
+    "https://your-frontend-domain.vercel.app",  # Add your actual frontend deployment URL
+    "*"  # Allow all origins for development (remove in production)
 ]
 
 # Add environment-specified origins
-origins.extend(ALLOWED_ORIGINS)
+if ALLOWED_ORIGINS:
+    origins.extend(ALLOWED_ORIGINS)
 
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=origins,
+    allow_origins=["*"],  # Allow all origins for development
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
