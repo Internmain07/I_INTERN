@@ -7,9 +7,18 @@ from app.db.session import engine
 from fastapi.middleware.cors import CORSMiddleware
 from pathlib import Path
 
+# Get environment
+ENVIRONMENT = os.getenv("ENVIRONMENT", "development")
+
 Base.metadata.create_all(bind=engine)
 
-app = FastAPI()
+app = FastAPI(
+    title="I-Intern API",
+    description="Backend API for I-Intern Platform",
+    version="1.0.0",
+    docs_url="/api/docs" if ENVIRONMENT == "development" else None,
+    redoc_url="/api/redoc" if ENVIRONMENT == "development" else None,
+)
 
 # Create uploads directory if it doesn't exist
 UPLOAD_DIR = Path("uploads")
@@ -23,7 +32,8 @@ app.mount("/uploads", StaticFiles(directory="uploads"), name="uploads")
 # Get allowed origins from environment variable or use defaults
 ALLOWED_ORIGINS = os.getenv("ALLOWED_ORIGINS", "").split(",") if os.getenv("ALLOWED_ORIGINS") else []
 
-origins = [
+# Default origins for development
+dev_origins = [
     "http://localhost:3000",  # React development server
     "http://127.0.0.1:3000",
     "http://localhost:5173",  # Vite development server
@@ -34,15 +44,33 @@ origins = [
     "http://127.0.0.1:8081",
     "http://localhost:8082",  # Alternative port
     "http://127.0.0.1:8082",
-    "https://i-intern.com",   # Production frontend URL - THIS IS YOUR ACTUAL DOMAIN
+]
+
+# Production origins
+prod_origins = [
+    "https://i-intern.com",   # Production frontend URL
     "http://i-intern.com",    # In case HTTP is used
     "https://www.i-intern.com",  # With www subdomain
     "http://www.i-intern.com",   # With www subdomain HTTP
 ]
 
-# Add environment-specified origins
-if ALLOWED_ORIGINS:
-    origins.extend(ALLOWED_ORIGINS)
+# Determine which origins to use
+if ENVIRONMENT == "production":
+    origins = prod_origins.copy()
+    # Add any additional origins from environment variable
+    if ALLOWED_ORIGINS:
+        origins.extend([origin.strip() for origin in ALLOWED_ORIGINS if origin.strip()])
+else:
+    # Development: allow both dev and prod origins
+    origins = dev_origins + prod_origins
+    if ALLOWED_ORIGINS:
+        origins.extend([origin.strip() for origin in ALLOWED_ORIGINS if origin.strip()])
+
+# Remove duplicates
+origins = list(set(origins))
+
+print(f"🌍 Environment: {ENVIRONMENT}")
+print(f"🔗 Allowed CORS origins: {origins}")
 
 # IMPORTANT: Cannot use allow_origins=["*"] with allow_credentials=True
 # Must specify exact origins when using credentials

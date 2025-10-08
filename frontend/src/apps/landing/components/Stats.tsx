@@ -102,7 +102,11 @@ export const Stats: React.FC = () => {
 
         setStats(formattedStats);
       } catch (error) {
-        console.error('Error fetching stats:', error);
+        // Silently fail and use fallback data if API is not available
+        // This prevents console errors when backend is not deployed yet
+        if (process.env.NODE_ENV === 'development') {
+          console.error('Error fetching stats:', error);
+        }
         // Keep fallback data if API fails
       }
     };
