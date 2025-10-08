@@ -1,31 +1,49 @@
 import React, { useState } from 'react';
 import { motion } from 'framer-motion';
 import { ArrowLeft, Mail, CheckCircle, GraduationCap } from 'lucide-react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
+import { apiClient } from '../../../api';
 
 export const ForgotPasswordPage: React.FC = () => {
   const [email, setEmail] = useState('');
   const [isLoading, setIsLoading] = useState(false);
-  const [isEmailSent, setIsEmailSent] = useState(false);
+  const [isOTPSent, setIsOTPSent] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+  const navigate = useNavigate();
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (email) {
       setIsLoading(true);
-      // Simulate password reset email sending
-      setTimeout(() => {
+      setError(null);
+      
+      try {
+        await apiClient.post('/api/v1/auth/forgot-password', { email });
+        setIsOTPSent(true);
+        // Navigate to verify OTP page after 2 seconds
+        setTimeout(() => {
+          navigate('/verify-otp', { state: { email } });
+        }, 2000);
+      } catch (err: any) {
+        setError(err.message || 'Failed to send OTP. Please try again.');
+      } finally {
         setIsLoading(false);
-        setIsEmailSent(true);
-      }, 2000);
+      }
     }
   };
 
-  const handleResendEmail = () => {
+  const handleResendOTP = async () => {
     setIsLoading(true);
-    setTimeout(() => {
+    setError(null);
+    
+    try {
+      await apiClient.post('/api/v1/auth/forgot-password', { email });
+      alert('OTP sent again!');
+    } catch (err: any) {
+      setError(err.message || 'Failed to resend OTP. Please try again.');
+    } finally {
       setIsLoading(false);
-      alert('Reset email sent again!');
-    }, 1500);
+    }
   };
 
   return (
@@ -66,7 +84,7 @@ export const ForgotPasswordPage: React.FC = () => {
           animate={{ opacity: 1, scale: 1 }}
           transition={{ duration: 0.6, delay: 0.3 }}
         >
-          {!isEmailSent ? (
+          {!isOTPSent ? (
             <>
               {/* Logo and Header */}
               <div className="text-center mb-8">
@@ -82,7 +100,7 @@ export const ForgotPasswordPage: React.FC = () => {
                 </motion.div>
                 
                 <h1 className="text-3xl font-bold text-[#004F4D] mb-2">Forgot Password?</h1>
-                <p className="text-gray-600">No worries! Enter your email and we'll send you reset instructions.</p>
+                <p className="text-gray-600">No worries! Enter your email and we'll send you a 6-digit OTP to reset your password.</p>
               </div>
 
               {/* Reset Form */}
@@ -93,6 +111,13 @@ export const ForgotPasswordPage: React.FC = () => {
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.6, delay: 0.4 }}
               >
+                {/* Error Message */}
+                {error && (
+                  <div className="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-xl">
+                    {error}
+                  </div>
+                )}
+
                 {/* Email Input */}
                 <div>
                   <label htmlFor="email" className="block text-sm font-semibold text-gray-700 mb-2">
@@ -123,10 +148,10 @@ export const ForgotPasswordPage: React.FC = () => {
                   {isLoading ? (
                     <div className="flex items-center justify-center gap-2">
                       <div className="w-5 h-5 border-2 border-white/30 border-t-white rounded-full animate-spin"></div>
-                      Sending Reset Link...
+                      Sending OTP...
                     </div>
                   ) : (
-                    'Send Reset Link'
+                    'Send OTP'
                   )}
                 </motion.button>
               </motion.form>
@@ -175,13 +200,13 @@ export const ForgotPasswordPage: React.FC = () => {
 
               <h1 className="text-3xl font-bold text-[#004F4D] mb-4">Check Your Email</h1>
               <p className="text-gray-600 mb-8 leading-relaxed">
-                We've sent password reset instructions to <strong>{email}</strong>. 
-                Please check your inbox and follow the link to reset your password.
+                We've sent a 6-digit OTP to <strong>{email}</strong>. 
+                Please check your inbox and enter the OTP on the next page to reset your password.
               </p>
 
               <div className="space-y-4">
                 <motion.button
-                  onClick={handleResendEmail}
+                  onClick={handleResendOTP}
                   disabled={isLoading}
                   className="w-full bg-[#1F7368] text-white py-4 px-6 rounded-2xl font-semibold shadow-lg hover:bg-[#004F4D] hover:shadow-xl transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed"
                   whileHover={{ scale: isLoading ? 1 : 1.02 }}
@@ -193,7 +218,7 @@ export const ForgotPasswordPage: React.FC = () => {
                       Resending...
                     </div>
                   ) : (
-                    'Resend Email'
+                    'Resend OTP'
                   )}
                 </motion.button>
 
@@ -214,7 +239,8 @@ export const ForgotPasswordPage: React.FC = () => {
                 animate={{ opacity: 1 }}
                 transition={{ duration: 0.6, delay: 0.4 }}
               >
-                <p>Didn't receive the email? Check your spam folder or contact support.</p>
+                <p>Didn't receive the OTP? Check your spam folder or contact support.</p>
+                <p className="mt-2">Redirecting to verification page...</p>
               </motion.div>
             </motion.div>
           )}

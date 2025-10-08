@@ -1,6 +1,7 @@
-from sqlalchemy import Column, Integer, String, Enum as SAEnum, Date, Text
+from sqlalchemy import Column, Integer, String, Enum as SAEnum, Date, Text, DateTime
 from sqlalchemy.orm import relationship
 from app.db.base import Base
+from datetime import datetime
 
 class UserRole(SAEnum):
     INTERN = "intern"
@@ -14,6 +15,12 @@ class User(Base):
     email = Column(String, unique=True, index=True, nullable=False)
     hashed_password = Column(String, nullable=False)
     role = Column(String, default=UserRole.INTERN)
+    
+    # Password reset fields (OTP-based)
+    reset_password_token = Column(String, nullable=True)  # Keep for backward compatibility
+    reset_password_token_expires = Column(DateTime, nullable=True)  # Keep for backward compatibility
+    reset_otp = Column(String, nullable=True)  # 6-digit OTP
+    reset_otp_expires = Column(DateTime, nullable=True)  # OTP expiration time
     
     # Basic profile fields
     name = Column(String, nullable=True)

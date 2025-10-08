@@ -4,12 +4,21 @@ from fastapi.responses import RedirectResponse
 from sqlalchemy.orm import Session
 from app.schemas.user import UserCreate, User
 from app.schemas.token import Token
+from app.schemas.password_reset import (
+    PasswordResetRequest,
+    PasswordResetConfirm,
+    PasswordResetResponse,
+    OTPVerification
+)
 from app.api import deps
 from app.core.security import create_access_token, get_password_hash, verify_password
 from app.models.user import User as UserModel
+from app.utils.email import send_password_reset_email
 import secrets
+import random
 import urllib.parse
 import os
+from datetime import datetime, timedelta
 
 router = APIRouter()
 
@@ -101,3 +110,111 @@ def list_all_users(db: Session = Depends(deps.get_db)):
     """DEBUG: List all users (REMOVE IN PRODUCTION!)"""
     users = db.query(UserModel).all()
     return [{"id": u.id, "email": u.email, "role": u.role} for u in users]
+
+
+@router.post("/forgot-password", response_model=PasswordResetResponse)
+def forgot_password(
+    reset_request: PasswordResetRequest,
+    db: Session = Depends(deps.get_db)
+):
+    """
+    Request a password reset. Sends an email with a 6-digit OTP.
+    Returns success even if email doesn't exist (for security).
+    """
+    user = db.query(UserModel).filter(UserModel.email == reset_request.email).first()
+    
+    if user:
+        # Generate a secure 6-digit OTP
+        reset_otp = ''.join([str(random.randint(0, 9)) for _ in range(6)])
+        
+        # Set OTP expiration (10 minutes from now)
+        expires_at = datetime.utcnow() + timedelta(minutes=10)
+        
+        # Store OTP and expiration in database
+        user.reset_otp = reset_otp
+        user.reset_otp_expires = expires_at
+        db.commit()
+        
+        # Send password reset email with OTP
+        try:
+            send_password_reset_email(user.email, reset_otp)
+        except Exception as e:
+            print(f"Failed to send email: {str(e)}")
+            # Don't fail the request if email fails
+    
+    # Always return success message (security best practice)
+    return PasswordResetResponse(
+        message="If an account exists with that email, you will receive a password reset OTP."
+    )
+
+
+@router.post("/verify-otp")
+def verify_otp(
+    otp_data: OTPVerification,
+    db: Session = Depends(deps.get_db)
+):
+    """
+    Verify if a password reset OTP is valid and not expired
+    """
+    user = db.query(UserModel).filter(
+        UserModel.email == otp_data.email
+    ).first()
+    
+    if not user or not user.reset_otp:
+        raise HTTPException(status_code=400, detail="Invalid or expired OTP")
+    
+    # Check if OTP matches
+    if user.reset_otp != otp_data.otp:
+        raise HTTPException(status_code=400, detail="Invalid OTP")
+    
+    # Check if OTP is expired
+    if user.reset_otp_expires < datetime.utcnow():
+        raise HTTPException(status_code=400, detail="OTP has expired. Please request a new one.")
+    
+    return {
+        "message": "OTP is valid",
+        "email": user.email
+    }
+
+
+@router.post("/reset-password", response_model=PasswordResetResponse)
+def reset_password(
+    reset_data: PasswordResetConfirm,
+    db: Session = Depends(deps.get_db)
+):
+    """
+    Reset password using a valid OTP
+    """
+    # Find user with this email
+    user = db.query(UserModel).filter(
+        UserModel.email == reset_data.email
+    ).first()
+    
+    if not user or not user.reset_otp:
+        raise HTTPException(status_code=400, detail="Invalid or expired OTP")
+    
+    # Check if OTP matches
+    if user.reset_otp != reset_data.otp:
+        raise HTTPException(status_code=400, detail="Invalid OTP")
+    
+    # Check if OTP is expired
+    if user.reset_otp_expires < datetime.utcnow():
+        # Clear expired OTP
+        user.reset_otp = None
+        user.reset_otp_expires = None
+        db.commit()
+        raise HTTPException(status_code=400, detail="OTP has expired. Please request a new one.")
+    
+    # Update password
+    user.hashed_password = get_password_hash(reset_data.new_password)
+    
+    # Clear reset OTP
+    user.reset_otp = None
+    user.reset_otp_expires = None
+    
+    db.commit()
+    
+    return PasswordResetResponse(
+        message="Password has been reset successfully. You can now log in with your new password.",
+        email=user.email
+    )

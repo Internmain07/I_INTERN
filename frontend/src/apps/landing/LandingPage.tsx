@@ -9,6 +9,8 @@ import { LoginPage } from './components/LoginPage';
 import { StudentRegistrationPage } from './components/StudentRegistrationPage';
 import { CompanyRegistrationPage } from './components/CompanyRegistrationPage';
 import { ForgotPasswordPage } from './components/ForgotPasswordPage';
+import { VerifyOTPPage } from './components/VerifyOTPPage';
+import { ResetPasswordPage } from './components/ResetPasswordPage';
 
 
 const LandingPage: React.FC = () => {
@@ -23,6 +25,8 @@ const LandingPage: React.FC = () => {
       <Route path="/register/student" element={<StudentRegistrationPage />} />
       <Route path="/register/company" element={<CompanyRegistrationPage />} />
       <Route path="/forgot-password" element={<ForgotPasswordPage />} />
+      <Route path="/verify-otp" element={<VerifyOTPPage />} />
+      <Route path="/reset-password" element={<ResetPasswordPage />} />
       <Route path="*" element={<Navigate to="/" replace />} />
     </Routes>
   );
