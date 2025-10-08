@@ -43,6 +43,7 @@ prod_origins = [
     "http://i-intern.com",
     "https://www.i-intern.com",
     "http://www.i-intern.com",
+    "https://i-intern-2.onrender.com",
 ]
 
 # Build origins list
