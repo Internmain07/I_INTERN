@@ -566,7 +566,7 @@ Support: support@i-intern.com
             </div>
             
             <div style="text-align: center; margin: 30px 0;">
-                <a href="http://localhost:8081/dashboard" class="cta-button">
+                <a href="{os.getenv('FRONTEND_URL', 'http://localhost:8081')}/dashboard" class="cta-button">
                     Get Started Now →
                 </a>
             </div>
