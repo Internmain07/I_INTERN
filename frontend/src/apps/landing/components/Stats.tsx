@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 // import { InternshipCarousel } from './InternshipCarousel'; // Temporarily hidden
 import { motion, useAnimation, useInView } from 'framer-motion';
-import { apiClient } from '@/api';
+import { apiClient } from '@/api'; // This now correctly imports your configured client
 
 interface Stat {
   label: string;
@@ -65,18 +65,16 @@ export const Stats: React.FC = () => {
   useEffect(() => {
     const fetchStats = async () => {
       try {
-        const data = await apiClient.get('/api/v1/landing/stats');
+        // This call now works correctly for both local and production environments
+        const { data } = await apiClient.get('/api/v1/landing/stats');
 
         // Helper function to round numbers nicely
         const roundNumber = (num: number): string => {
           if (num >= 1000) {
-            // Round to nearest 100 for numbers >= 1000
             return `${Math.floor(num / 100) * 100}+`;
           } else if (num >= 100) {
-            // Round to nearest 50 for numbers >= 100
             return `${Math.floor(num / 50) * 50}+`;
           } else if (num >= 10) {
-            // Round to nearest 10 for numbers >= 10
             return `${Math.floor(num / 10) * 10}+`;
           } else {
             return `${num}+`;
@@ -84,15 +82,15 @@ export const Stats: React.FC = () => {
         };
 
         // Use real data if it exceeds mock data, otherwise use mock data
-        const internshipsValue = data.internships_posted > 250 
+        const internshipsValue = data.internships_posted > 250
           ? roundNumber(data.internships_posted)
           : '250+';
-        
-        const companiesValue = data.companies_registered > 20 
+
+        const companiesValue = data.companies_registered > 20
           ? roundNumber(data.companies_registered)
           : '20+';
-        
-        const internsValue = data.students_placed > 100 
+
+        const internsValue = data.students_placed > 100
           ? roundNumber(data.students_placed)
           : '100+';
 
@@ -101,7 +99,7 @@ export const Stats: React.FC = () => {
           { label: 'Companies Registered', value: companiesValue },
           { label: 'Interns Joined', value: internsValue },
         ];
-        
+
         setStats(formattedStats);
       } catch (error) {
         console.error('Error fetching stats:', error);
@@ -138,21 +136,21 @@ export const Stats: React.FC = () => {
                 className="bg-[#63D7C7] p-8 rounded-2xl text-center shadow-lg"
                 initial={{ opacity: 0, scale: 0.8 }}
                 whileInView={{ opacity: 1, scale: 1 }}
-                transition={{ 
-                  duration: 0.6, 
-                  delay: index * 0.2 
+                transition={{
+                  duration: 0.6,
+                  delay: index * 0.2
                 }}
-                whileHover={{ 
+                whileHover={{
                   scale: 1.05,
                   boxShadow: "0 25px 50px -12px rgba(0, 0, 0, 0.25)"
                 }}
                 viewport={{ once: true }}
               >
                 <div className="text-5xl lg:text-6xl font-bold text-[#004F4D] mb-4">
-                  <AnimatedCounter 
-                    from={0} 
-                    to={parseInt((stat.value || '0').replace(/[+,]/g, ''))} 
-                    duration={2.5} 
+                  <AnimatedCounter
+                    from={0}
+                    to={parseInt((stat.value || '0').replace(/[+,]/g, ''))}
+                    duration={2.5}
                   />
                   {(stat.value || '').includes('+') && '+'}
                 </div>
@@ -173,5 +171,3 @@ export const Stats: React.FC = () => {
     </>
   );
 };
-
-
