@@ -16,3 +16,7 @@ services:
         value: https://i-intern.com,https://www.i-intern.com
       - key: ENVIRONMENT
         value: production
+      - key: CARGO_HOME
+        value: /opt/render/project/.cargo
+      - key: CARGO_TARGET_DIR
+        value: /opt/render/project/.cargo-target
