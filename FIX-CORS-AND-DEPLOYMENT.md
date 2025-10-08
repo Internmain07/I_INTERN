@@ -3,7 +3,7 @@
 ## ❌ The Problem You're Seeing
 
 ```
-1. Access to fetch at 'https://i-intern-backend.onrender.com/api/v1/landing/stats' 
+1. Access to fetch at 'https://i-intern.onrender.com/api/v1/landing/stats' 
    from origin 'https://i-intern.com' has been blocked by CORS policy
 
 2. Failed to load resource: net::ERR_FAILED
@@ -16,7 +16,7 @@
 ### CORS Error = 2 Possible Issues:
 
 **Issue A: Backend Not Running** (Most Likely)
-- Your backend at `https://i-intern-backend.onrender.com` is not responding at all
+- Your backend at `https://i-intern.onrender.com` is not responding at all
 - This causes CORS errors because the browser can't even reach the server
 - The 404 error confirms this
 
@@ -44,7 +44,7 @@
 #### Option 1B: Test Backend URL Directly
 Open a new browser tab and visit:
 ```
-https://i-intern-backend.onrender.com/
+https://i-intern.onrender.com/
 ```
 
 **Expected Response:**
@@ -202,19 +202,19 @@ Build failed 😞
 
 #### Test 1: Root Endpoint
 ```
-https://i-intern-backend.onrender.com/
+https://i-intern.onrender.com/
 ```
 **Expected:** `{"message": "Welcome to the i-Intern API"}`
 
 #### Test 2: Stats Endpoint
 ```
-https://i-intern-backend.onrender.com/api/v1/landing/stats
+https://i-intern.onrender.com/api/v1/landing/stats
 ```
 **Expected:** `{"internships_posted": 0, "companies_registered": 0, "students_placed": 0}`
 
 #### Test 3: Docs (if ENVIRONMENT=production, this might be disabled)
 ```
-https://i-intern-backend.onrender.com/api/docs
+https://i-intern.onrender.com/api/docs
 ```
 
 #### Test 4: CORS Headers
@@ -334,8 +334,8 @@ Before your site will work, ALL of these must be true:
 
 ### Backend Checklist:
 - [ ] Render service exists and shows "Live" status
-- [ ] https://i-intern-backend.onrender.com/ returns JSON (not 404)
-- [ ] https://i-intern-backend.onrender.com/api/v1/landing/stats returns stats
+- [ ] https://i-intern.onrender.com/ returns JSON (not 404)
+- [ ] https://i-intern.onrender.com/api/v1/landing/stats returns stats
 - [ ] Backend logs show "Your service is live"
 - [ ] Backend logs show CORS origins including `https://i-intern.com`
 
@@ -347,7 +347,7 @@ Before your site will work, ALL of these must be true:
 
 ### Frontend Checklist:
 - [ ] Frontend is deployed to https://i-intern.com
-- [ ] Frontend has `.env.production` with `VITE_API_URL=https://i-intern-backend.onrender.com`
+- [ ] Frontend has `.env.production` with `VITE_API_URL=https://i-intern.onrender.com`
 - [ ] Frontend was built with correct environment variables
 - [ ] Browser cache cleared
 
@@ -397,7 +397,7 @@ Backend:  https://i-intern.com/api
 **Cross-Origin Request (Needs CORS):**
 ```
 Frontend: https://i-intern.com
-Backend:  https://i-intern-backend.onrender.com
+Backend:  https://i-intern.onrender.com
 → ⚠️ Different domains, CORS required!
 ```
 
@@ -446,7 +446,7 @@ If you've tried everything above and it still doesn't work:
    - Share for debugging
 
 3. **Verify URLs:**
-   - Backend URL: `https://i-intern-backend.onrender.com`
+   - Backend URL: `https://i-intern.onrender.com`
    - Frontend URL: `https://i-intern.com`
    - Are these correct?
 

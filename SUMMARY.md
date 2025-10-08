@@ -54,7 +54,7 @@ Error fetching stats: SyntaxError: Unexpected token 'N', "Not Found" is not vali
 Frontend (i-intern.com) → Same domain /api/... → 404 Not Found
 
 ✅ SHOULD BE:
-Frontend (i-intern.com) → Backend API (i-intern-backend.onrender.com) → Database
+Frontend (i-intern.com) → Backend API (i-intern.onrender.com) → Database
 ```
 
 ---
@@ -110,7 +110,7 @@ ENVIRONMENT=production
 
 ### Frontend Environment Variable (Production):
 ```bash
-VITE_API_URL=https://i-intern-backend.onrender.com
+VITE_API_URL=https://i-intern.onrender.com
 # Update this after deploying backend!
 ```
 

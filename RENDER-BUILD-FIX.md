@@ -90,13 +90,13 @@ INFO: Uvicorn running on http://0.0.0.0:10000
 
 1. **Backend Health Check:**
    ```
-   https://i-intern-backend.onrender.com/
+   https://i-intern.onrender.com/
    ```
    Should return: `{"message": "Welcome to the i-Intern API"}`
 
 2. **Stats Endpoint:**
    ```
-   https://i-intern-backend.onrender.com/api/v1/landing/stats
+   https://i-intern.onrender.com/api/v1/landing/stats
    ```
    Should return JSON with counts
 

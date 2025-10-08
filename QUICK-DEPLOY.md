@@ -37,7 +37,7 @@
 
 6. Click "Create Web Service"
 7. Wait 3-5 minutes for deployment
-8. **COPY YOUR BACKEND URL:** `https://i-intern-backend.onrender.com`
+8. **COPY YOUR BACKEND URL:** `https://i-intern.onrender.com`
 
 ---
 
@@ -50,7 +50,7 @@
    VITE_API_URL=https://i-intern.com
    
    # NEW (your Render backend):
-   VITE_API_URL=https://i-intern-backend.onrender.com
+   VITE_API_URL=https://i-intern.onrender.com
    ```
 
 ---
@@ -69,10 +69,10 @@ Then push to GitHub (if you have auto-deploy) or manually upload the `dist` fold
 ### Step 4: Test Everything
 
 1. **Test Backend Directly:**
-   - Visit: `https://i-intern-backend.onrender.com/`
+   - Visit: `https://i-intern.onrender.com/`
    - Should see: `{"message": "Welcome to the i-Intern API"}`
    
-   - Visit: `https://i-intern-backend.onrender.com/api/v1/landing/stats`
+   - Visit: `https://i-intern.onrender.com/api/v1/landing/stats`
    - Should see: `{"internships_posted": 0, "companies_registered": 0, "students_placed": 0}`
 
 2. **Test Frontend:**
@@ -104,10 +104,10 @@ Then push to GitHub (if you have auto-deploy) or manually upload the `dist` fold
 | Service | URL | Purpose |
 |---------|-----|---------|
 | Frontend | https://i-intern.com | Your live website |
-| Backend | https://i-intern-backend.onrender.com | API server |
+| Backend | https://i-intern.onrender.com | API server |
 | Database | Neon DB (already configured) | PostgreSQL |
-| Backend Health | https://i-intern-backend.onrender.com/ | Test if backend is up |
-| Backend Stats | https://i-intern-backend.onrender.com/api/v1/landing/stats | Test stats endpoint |
+| Backend Health | https://i-intern.onrender.com/ | Test if backend is up |
+| Backend Stats | https://i-intern.onrender.com/api/v1/landing/stats | Test stats endpoint |
 
 ---
 

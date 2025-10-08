@@ -58,12 +58,12 @@ Render offers a free tier and is very easy to use.
 5. **Deploy!**
    - Click "Create Web Service"
    - Wait for deployment to complete (~3-5 minutes)
-   - Note the URL: `https://i-intern-backend.onrender.com`
+   - Note the URL: `https://i-intern.onrender.com`
 
 6. **Test the backend:**
-   - Visit: `https://i-intern-backend.onrender.com/`
+   - Visit: `https://i-intern.onrender.com/`
    - You should see: `{"message": "Welcome to the i-Intern API"}`
-   - Test stats endpoint: `https://i-intern-backend.onrender.com/api/v1/landing/stats`
+   - Test stats endpoint: `https://i-intern.onrender.com/api/v1/landing/stats`
 
 ---
 
@@ -133,7 +133,7 @@ Your frontend is likely already deployed (since you have a live site). But here'
 
    **For Render backend:**
    ```
-   VITE_API_URL=https://i-intern-backend.onrender.com
+   VITE_API_URL=https://i-intern.onrender.com
    ```
 
    **For Railway backend:**
@@ -165,7 +165,7 @@ Your frontend is likely already deployed (since you have a live site). But here'
 
 ### Setup API Subdomain
 
-If you want `api.i-intern.com` instead of `i-intern-backend.onrender.com`:
+If you want `api.i-intern.com` instead of `i-intern.onrender.com`:
 
 1. **In Render/Railway:**
    - Go to Settings → Custom Domain
@@ -176,7 +176,7 @@ If you want `api.i-intern.com` instead of `i-intern-backend.onrender.com`:
      ```
      Type: CNAME
      Name: api
-     Value: i-intern-backend.onrender.com (or your Railway URL)
+     Value: i-intern.onrender.com (or your Railway URL)
      ```
 
 3. **Update frontend .env.production:**
@@ -250,7 +250,7 @@ curl https://your-backend-url.onrender.com/api/v1/landing/stats
 
 - [ ] Backend deployed to Render/Railway/Heroku
 - [ ] Environment variables configured
-- [ ] Backend URL noted (e.g., `https://i-intern-backend.onrender.com`)
+- [ ] Backend URL noted (e.g., `https://i-intern.onrender.com`)
 - [ ] Backend health check successful
 - [ ] Stats endpoint returns JSON
 - [ ] Frontend `.env.production` updated with backend URL
@@ -268,7 +268,7 @@ curl https://your-backend-url.onrender.com/api/v1/landing/stats
 ```
 Frontend (i-intern.com)
     ↓
-Backend API (api.i-intern.com or i-intern-backend.onrender.com)
+Backend API (api.i-intern.com or i-intern.onrender.com)
     ↓
 PostgreSQL Database (Neon DB)
 ```
