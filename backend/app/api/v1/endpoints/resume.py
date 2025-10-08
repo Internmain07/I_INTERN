@@ -2,7 +2,7 @@ from fastapi import APIRouter, HTTPException
 from fastapi.responses import Response
 from pydantic import BaseModel
 from typing import List, Optional
-import weasyprint
+from xhtml2pdf import pisa  # Changed from weasyprint to xhtml2pdf
 from jinja2 import Template
 import io
 
@@ -360,9 +360,16 @@ async def generate_resume(resume_data: ResumeData):
             certifications=resume_data.certifications
         )
 
-        # Generate PDF using WeasyPrint
+        # Generate PDF using xhtml2pdf (pure Python, no Rust dependencies)
         pdf_buffer = io.BytesIO()
-        weasyprint.HTML(string=html_content).write_pdf(pdf_buffer)
+        pisa_status = pisa.CreatePDF(
+            io.BytesIO(html_content.encode('utf-8')),
+            dest=pdf_buffer
+        )
+        
+        if pisa_status.err:
+            raise HTTPException(status_code=500, detail="Error generating PDF")
+        
         pdf_buffer.seek(0)
 
         # Return PDF as response
