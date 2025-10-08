@@ -18,11 +18,23 @@ services:
       
       # CORS and URL configuration
       - key: ALLOWED_ORIGINS
-        value: https://i-intern.com,https://www.i-intern.com
+        value: https://i-intern-2.onrender.com,https://i-intern.com,https://www.i-intern.com
       - key: FRONTEND_URL
-        value: https://i-intern.com
+        value: https://i-intern-2.onrender.com
       - key: BACKEND_URL
-        sync: false  # Set to your actual backend URL like https://i-intern-backend.onrender.com
+        sync: false  # Set to your actual backend URL like https://i-intern-api.onrender.com
+      
+      # Cookie configuration (required for secure authentication)
+      - key: COOKIE_SAMESITE
+        value: lax
+      - key: COOKIE_SECURE
+        value: true
+      - key: COOKIE_DOMAIN
+        value: .onrender.com
+      - key: COOKIE_HTTPONLY
+        value: true
+      - key: COOKIE_MAX_AGE
+        value: 604800
       
       # Email/SMTP configuration (required for password reset and email verification)
       - key: SMTP_SERVER

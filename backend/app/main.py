@@ -44,6 +44,7 @@ prod_origins = [
     "https://www.i-intern.com",
     "http://www.i-intern.com",
     "https://i-intern-2.onrender.com",
+    "https://i-intern-api.onrender.com",  # Backend URL for cookie domain
 ]
 
 # Build origins list

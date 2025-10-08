@@ -653,12 +653,12 @@ export const CompanyRegistrationPage: React.FC = () => {
               <label htmlFor="employer-terms" className="text-sm text-gray-700 select-none">
                 I confirm our company agrees to the I-Intern{' '}
                 <a
-                  href="/employer-terms"
+                  href="/terms-and-conditions"
                   target="_blank"
                   rel="noopener noreferrer"
                   className="text-[#1F7368] underline hover:text-[#004F4D]"
                 >
-                  Employer Terms of Service
+                  Terms and Conditions
                 </a>
               </label>
             </div>

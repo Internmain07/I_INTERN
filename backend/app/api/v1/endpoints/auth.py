@@ -1,4 +1,4 @@
-from fastapi import APIRouter, Depends, HTTPException, Request
+from fastapi import APIRouter, Depends, HTTPException, Request, Response
 from fastapi.security import OAuth2PasswordRequestForm
 from fastapi.responses import RedirectResponse
 from sqlalchemy.orm import Session
@@ -17,6 +17,7 @@ from app.schemas.email_verification import (
 )
 from app.api import deps
 from app.core.security import create_access_token, get_password_hash, verify_password
+from app.core.config import settings
 from app.models.user import User as UserModel
 from app.utils.email import send_password_reset_email, send_email_verification_otp, send_welcome_email
 import secrets
@@ -133,7 +134,7 @@ def register(user_in: UserCreate, db: Session = Depends(deps.get_db)):
     )
 
 @router.post("/login", response_model=Token)
-def login(form_data: OAuth2PasswordRequestForm = Depends(), db: Session = Depends(deps.get_db)):
+def login(response: Response, form_data: OAuth2PasswordRequestForm = Depends(), db: Session = Depends(deps.get_db)):
     user = db.query(UserModel).filter(UserModel.email == form_data.username).first()
     if not user or not verify_password(form_data.password, user.hashed_password):
         raise HTTPException(
@@ -142,12 +143,38 @@ def login(form_data: OAuth2PasswordRequestForm = Depends(), db: Session = Depend
             headers={"WWW-Authenticate": "Bearer"},
         )
     access_token = create_access_token(subject=user.email)
+    
+    # Set cookie with configured settings
+    response.set_cookie(
+        key="access_token",
+        value=access_token,
+        httponly=settings.COOKIE_HTTPONLY,
+        secure=settings.COOKIE_SECURE,
+        samesite=settings.COOKIE_SAMESITE,
+        max_age=settings.COOKIE_MAX_AGE,
+        domain=settings.COOKIE_DOMAIN
+    )
+    
     return {"access_token": access_token, "token_type": "bearer"}
 
 @router.get("/me", response_model=User)
 def get_current_user_profile(current_user: UserModel = Depends(deps.get_current_user)):
     """Get current user profile"""
     return current_user
+
+@router.post("/logout")
+def logout(response: Response):
+    """
+    Logout user by clearing the authentication cookie.
+    """
+    response.delete_cookie(
+        key="access_token",
+        domain=settings.COOKIE_DOMAIN,
+        secure=settings.COOKIE_SECURE,
+        httponly=settings.COOKIE_HTTPONLY,
+        samesite=settings.COOKIE_SAMESITE
+    )
+    return {"message": "Successfully logged out"}
 
 # Debug endpoint removed for production security
 # @router.get("/debug/users")
@@ -313,6 +340,7 @@ def send_verification_otp(
 
 @router.post("/verify-email", response_model=Token)
 def verify_email(
+    response: Response,
     request: VerifyEmailRequest,
     db: Session = Depends(deps.get_db)
 ):
@@ -329,6 +357,18 @@ def verify_email(
     if user.email_verified == "true":
         # Already verified, just return token
         access_token = create_access_token(subject=user.email)
+        
+        # Set cookie with configured settings
+        response.set_cookie(
+            key="access_token",
+            value=access_token,
+            httponly=settings.COOKIE_HTTPONLY,
+            secure=settings.COOKIE_SECURE,
+            samesite=settings.COOKIE_SAMESITE,
+            max_age=settings.COOKIE_MAX_AGE,
+            domain=settings.COOKIE_DOMAIN
+        )
+        
         return {"access_token": access_token, "token_type": "bearer"}
     
     # Check if OTP exists
@@ -358,5 +398,17 @@ def verify_email(
     
     # Generate access token for the user
     access_token = create_access_token(subject=user.email)
+    
+    # Set cookie with configured settings
+    response.set_cookie(
+        key="access_token",
+        value=access_token,
+        httponly=settings.COOKIE_HTTPONLY,
+        secure=settings.COOKIE_SECURE,
+        samesite=settings.COOKIE_SAMESITE,
+        max_age=settings.COOKIE_MAX_AGE,
+        domain=settings.COOKIE_DOMAIN
+    )
+    
     return {"access_token": access_token, "token_type": "bearer"}
 

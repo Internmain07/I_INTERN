@@ -533,7 +533,7 @@ export const StudentRegistrationPage: React.FC = () => {
               <label htmlFor="terms" className="text-sm text-gray-700 select-none">
                 I agree to the{' '}
                 <a
-                  href="/interns-terms-and-conditions"
+                  href="/terms-and-conditions"
                   target="_blank"
                   rel="noopener noreferrer"
                   className="text-[#1F7368] underline hover:text-[#004F4D]"
