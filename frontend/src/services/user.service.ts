@@ -72,6 +72,22 @@ export const userService = {
 
     return response.json();
   },
+
+  async deleteAvatar(): Promise<{ message: string }> {
+    const response = await fetch(`${API_URL}/api/v1/profile/delete-avatar`, {
+      method: 'DELETE',
+      headers: {
+        'Authorization': `Bearer ${localStorage.getItem('authToken')}`,
+      },
+    });
+
+    if (!response.ok) {
+      const error = await response.json();
+      throw new Error(error.detail || 'Failed to delete avatar');
+    }
+
+    return response.json();
+  },
   
   // Work Experience endpoints
   async getWorkExperiences(): Promise<WorkExperience[]> {

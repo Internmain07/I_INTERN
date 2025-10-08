@@ -79,6 +79,48 @@ async def upload_avatar(
         db.rollback()
         raise HTTPException(status_code=500, detail=f"Failed to upload avatar: {str(e)}")
 
+@router.delete("/delete-avatar")
+async def delete_avatar(
+    db: Session = Depends(deps.get_db),
+    current_user: User = Depends(deps.get_current_user),
+):
+    """Delete profile picture/avatar"""
+    print(f"DEBUG: Deleting avatar for user {current_user.email}")
+    
+    try:
+        # Check if user has an avatar
+        if not current_user.avatar_url:
+            raise HTTPException(status_code=404, detail="No avatar to delete")
+        
+        # Extract filename from avatar_url
+        avatar_filename = os.path.basename(current_user.avatar_url)
+        file_path = UPLOAD_DIR / avatar_filename
+        
+        # Delete file from filesystem if it exists
+        if file_path.exists():
+            os.remove(file_path)
+            print(f"DEBUG: Deleted avatar file: {file_path}")
+        else:
+            print(f"WARNING: Avatar file not found: {file_path}")
+        
+        # Update user's avatar_url to None
+        current_user.avatar_url = None
+        db.commit()
+        db.refresh(current_user)
+        
+        print(f"DEBUG: Successfully deleted avatar")
+        
+        return {
+            "message": "Avatar deleted successfully"
+        }
+    
+    except HTTPException:
+        raise
+    except Exception as e:
+        print(f"ERROR: Failed to delete avatar: {str(e)}")
+        db.rollback()
+        raise HTTPException(status_code=500, detail=f"Failed to delete avatar: {str(e)}")
+
 # ==================== WORK EXPERIENCE ENDPOINTS ====================
 
 @router.get("/work-experiences", response_model=List[WorkExperienceSchema])

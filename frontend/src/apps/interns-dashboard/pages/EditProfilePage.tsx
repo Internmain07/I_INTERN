@@ -182,6 +182,38 @@ const EditProfilePage = () => {
     }
   };
 
+  const handleAvatarDelete = async () => {
+    if (!avatarUrl) {
+      toast({
+        title: "No Avatar",
+        description: "You don't have a profile picture to delete",
+        variant: "destructive",
+      });
+      return;
+    }
+
+    setIsUploadingAvatar(true);
+
+    try {
+      await userService.deleteAvatar();
+      setAvatarUrl("");
+      
+      toast({
+        title: "Success",
+        description: "Profile picture deleted successfully!",
+      });
+    } catch (error: any) {
+      console.error("Error deleting avatar:", error);
+      toast({
+        title: "Delete Failed",
+        description: error.message || "Failed to delete profile picture",
+        variant: "destructive",
+      });
+    } finally {
+      setIsUploadingAvatar(false);
+    }
+  };
+
   const handleEducationChange = (id: number, field: string, value: string) => {
     setEducationEntries(prev => 
       prev.map(entry => 
@@ -438,9 +470,23 @@ const EditProfilePage = () => {
                     className="hidden"
                   />
                 </div>
-                <p className="text-sm text-muted-foreground">
-                  {isUploadingAvatar ? "Uploading..." : "Click the camera icon to upload a profile picture"}
-                </p>
+                <div className="space-y-2">
+                  <p className="text-sm text-muted-foreground">
+                    {isUploadingAvatar ? "Processing..." : "Click the camera icon to upload a profile picture"}
+                  </p>
+                  {avatarUrl && (
+                    <Button
+                      variant="destructive"
+                      size="sm"
+                      onClick={handleAvatarDelete}
+                      disabled={isUploadingAvatar}
+                      className="w-full"
+                    >
+                      <Trash className="h-4 w-4 mr-2" />
+                      Delete Profile Picture
+                    </Button>
+                  )}
+                </div>
                 <p className="text-xs text-muted-foreground">
                   Max size: 5MB • Formats: JPEG, PNG, GIF, WebP
                 </p>
