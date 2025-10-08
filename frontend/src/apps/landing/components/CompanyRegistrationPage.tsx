@@ -162,16 +162,15 @@ export const CompanyRegistrationPage: React.FC = () => {
           skills: '', // Not applicable for companies
         });
         
-        // Store token
-        localStorage.setItem('authToken', response.access_token);
-        localStorage.setItem('userRole', 'company');
+        // Don't store token yet - user needs to verify email first
+        console.log('✅ Registration successful:', response.message);
         
         setIsRegistered(true);
         
-        // Redirect to dashboard after 2 seconds
+        // Redirect to email verification page after 1.5 seconds
         setTimeout(() => {
-          navigate('/company/dashboard');
-        }, 2000);
+          navigate('/verify-email', { state: { email: formData.email } });
+        }, 1500);
       } catch (error: any) {
         setServerError(error.message || 'Registration failed. Please try again.');
       } finally {

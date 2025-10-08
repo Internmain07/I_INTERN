@@ -10,10 +10,15 @@ from app.schemas.password_reset import (
     PasswordResetResponse,
     OTPVerification
 )
+from app.schemas.email_verification import (
+    SendVerificationOTPRequest,
+    VerifyEmailRequest,
+    EmailVerificationResponse
+)
 from app.api import deps
 from app.core.security import create_access_token, get_password_hash, verify_password
 from app.models.user import User as UserModel
-from app.utils.email import send_password_reset_email
+from app.utils.email import send_password_reset_email, send_email_verification_otp, send_welcome_email
 import secrets
 import random
 import urllib.parse
@@ -73,20 +78,49 @@ async def google_callback(code: str, state: str, db: Session = Depends(deps.get_
     frontend_url = "http://localhost:8081/login?error=google_not_configured"
     return RedirectResponse(url=frontend_url)
 
-@router.post("/register", response_model=Token)
+@router.post("/register", response_model=EmailVerificationResponse)
 def register(user_in: UserCreate, db: Session = Depends(deps.get_db)):
+    """
+    Register a new user and send email verification OTP.
+    User must verify email before they can login.
+    """
     db_user = db.query(UserModel).filter(UserModel.email == user_in.email).first()
     if db_user:
         raise HTTPException(status_code=400, detail="Email already registered")
 
+    # Generate a secure 6-digit OTP for email verification
+    verification_otp = ''.join([str(random.randint(0, 9)) for _ in range(6)])
+    
+    # Set OTP expiration (10 minutes from now)
+    expires_at = datetime.utcnow() + timedelta(minutes=10)
+
+    # Create user with hashed password and verification OTP
     hashed_password = get_password_hash(user_in.password)
-    db_user = UserModel(email=user_in.email, hashed_password=hashed_password, role=user_in.role, skills=user_in.skills)
+    db_user = UserModel(
+        email=user_in.email, 
+        hashed_password=hashed_password, 
+        role=user_in.role, 
+        skills=user_in.skills,
+        email_verified="false",
+        email_verification_otp=verification_otp,
+        email_verification_otp_expires=expires_at
+    )
     db.add(db_user)
     db.commit()
     db.refresh(db_user)
 
-    access_token = create_access_token(subject=user_in.email)
-    return {"access_token": access_token, "token_type": "bearer"}
+    # Send verification email with OTP
+    try:
+        send_email_verification_otp(db_user.email, verification_otp)
+    except Exception as e:
+        print(f"Failed to send verification email: {str(e)}")
+        # Don't fail registration if email fails - user can request new OTP
+
+    return EmailVerificationResponse(
+        message="Account created successfully. Please check your email for verification OTP.",
+        email=db_user.email,
+        email_verified=False
+    )
 
 @router.post("/login", response_model=Token)
 def login(form_data: OAuth2PasswordRequestForm = Depends(), db: Session = Depends(deps.get_db)):
@@ -218,3 +252,100 @@ def reset_password(
         message="Password has been reset successfully. You can now log in with your new password.",
         email=user.email
     )
+
+@router.post("/send-verification-otp", response_model=EmailVerificationResponse)
+def send_verification_otp(
+    request: SendVerificationOTPRequest,
+    db: Session = Depends(deps.get_db)
+):
+    """
+    Send an email verification OTP to the user's email address.
+    This can be used for new users or users who need to re-verify their email.
+    """
+    user = db.query(UserModel).filter(UserModel.email == request.email).first()
+    
+    if not user:
+        raise HTTPException(status_code=404, detail="User not found")
+    
+    # Check if email is already verified
+    if user.email_verified == "true":
+        return EmailVerificationResponse(
+            message="Email is already verified",
+            email=user.email,
+            email_verified=True
+        )
+    
+    # Generate a secure 6-digit OTP
+    verification_otp = ''.join([str(random.randint(0, 9)) for _ in range(6)])
+    
+    # Set OTP expiration (10 minutes from now)
+    expires_at = datetime.utcnow() + timedelta(minutes=10)
+    
+    # Store OTP and expiration in database
+    user.email_verification_otp = verification_otp
+    user.email_verification_otp_expires = expires_at
+    db.commit()
+    
+    # Send verification email with OTP
+    try:
+        send_email_verification_otp(user.email, verification_otp)
+    except Exception as e:
+        print(f"Failed to send email: {str(e)}")
+        # Don't fail the request if email fails
+    
+    return EmailVerificationResponse(
+        message="Verification OTP has been sent to your email",
+        email=user.email,
+        email_verified=False
+    )
+
+
+@router.post("/verify-email", response_model=Token)
+def verify_email(
+    request: VerifyEmailRequest,
+    db: Session = Depends(deps.get_db)
+):
+    """
+    Verify email using OTP and return access token.
+    This completes the registration process.
+    """
+    user = db.query(UserModel).filter(UserModel.email == request.email).first()
+    
+    if not user:
+        raise HTTPException(status_code=404, detail="User not found")
+    
+    # Check if email is already verified
+    if user.email_verified == "true":
+        # Already verified, just return token
+        access_token = create_access_token(subject=user.email)
+        return {"access_token": access_token, "token_type": "bearer"}
+    
+    # Check if OTP exists
+    if not user.email_verification_otp:
+        raise HTTPException(status_code=400, detail="No OTP found. Please request a new verification code.")
+    
+    # Check if OTP matches
+    if user.email_verification_otp != request.otp:
+        raise HTTPException(status_code=400, detail="Invalid OTP code")
+    
+    # Check if OTP is expired
+    if user.email_verification_otp_expires < datetime.utcnow():
+        raise HTTPException(status_code=400, detail="OTP has expired. Please request a new verification code.")
+    
+    # Mark email as verified
+    user.email_verified = "true"
+    user.email_verification_otp = None  # Clear the OTP
+    user.email_verification_otp_expires = None
+    db.commit()
+    
+    # Send welcome email after successful verification
+    try:
+        send_welcome_email(user.email, user.role, user.name)
+    except Exception as e:
+        print(f"Failed to send welcome email: {str(e)}")
+        # Don't fail the verification if welcome email fails
+    
+    # Generate access token for the user
+    access_token = create_access_token(subject=user.email)
+    return {"access_token": access_token, "token_type": "bearer"}
+

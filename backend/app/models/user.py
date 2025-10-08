@@ -16,6 +16,11 @@ class User(Base):
     hashed_password = Column(String, nullable=False)
     role = Column(String, default=UserRole.INTERN)
     
+    # Email verification fields
+    email_verified = Column(String, default="false")  # "true" or "false" as string
+    email_verification_otp = Column(String, nullable=True)  # 6-digit OTP for email verification
+    email_verification_otp_expires = Column(DateTime, nullable=True)  # OTP expiration time
+    
     # Password reset fields (OTP-based)
     reset_password_token = Column(String, nullable=True)  # Keep for backward compatibility
     reset_password_token_expires = Column(DateTime, nullable=True)  # Keep for backward compatibility

@@ -27,6 +27,21 @@ export interface UserProfile {
   skills: string | null;
 }
 
+export interface EmailVerificationRequest {
+  email: string;
+  otp: string;
+}
+
+export interface SendVerificationOTPRequest {
+  email: string;
+}
+
+export interface EmailVerificationResponse {
+  message: string;
+  email?: string;
+  email_verified?: boolean;
+}
+
 export const authService = {
   async login(credentials: LoginRequest): Promise<AuthResponse> {
     const formData = new URLSearchParams();
@@ -56,8 +71,16 @@ export const authService = {
     return data;
   },
 
-  async register(data: RegisterRequest): Promise<AuthResponse> {
+  async register(data: RegisterRequest): Promise<EmailVerificationResponse> {
     return apiClient.post('/api/v1/auth/register', data);
+  },
+
+  async verifyEmail(data: EmailVerificationRequest): Promise<AuthResponse> {
+    return apiClient.post('/api/v1/auth/verify-email', data);
+  },
+
+  async sendVerificationOTP(data: SendVerificationOTPRequest): Promise<EmailVerificationResponse> {
+    return apiClient.post('/api/v1/auth/send-verification-otp', data);
   },
 
   async getCurrentUser(): Promise<UserProfile> {

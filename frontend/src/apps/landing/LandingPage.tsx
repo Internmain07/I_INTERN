@@ -11,6 +11,7 @@ import { CompanyRegistrationPage } from './components/CompanyRegistrationPage';
 import { ForgotPasswordPage } from './components/ForgotPasswordPage';
 import { VerifyOTPPage } from './components/VerifyOTPPage';
 import { ResetPasswordPage } from './components/ResetPasswordPage';
+import { EmailVerificationPage } from './components/EmailVerificationPage';
 
 
 const LandingPage: React.FC = () => {
@@ -24,6 +25,7 @@ const LandingPage: React.FC = () => {
       <Route path="/login" element={<LoginPage />} />
       <Route path="/register/student" element={<StudentRegistrationPage />} />
       <Route path="/register/company" element={<CompanyRegistrationPage />} />
+      <Route path="/verify-email" element={<EmailVerificationPage />} />
       <Route path="/forgot-password" element={<ForgotPasswordPage />} />
       <Route path="/verify-otp" element={<VerifyOTPPage />} />
       <Route path="/reset-password" element={<ResetPasswordPage />} />

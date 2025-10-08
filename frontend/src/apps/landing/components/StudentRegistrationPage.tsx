@@ -144,16 +144,15 @@ export const StudentRegistrationPage: React.FC = () => {
           skills: '', // Can be added later in profile
         });
         
-        // Store token
-        localStorage.setItem('authToken', response.access_token);
-        localStorage.setItem('userRole', 'intern');
+        // Don't store token yet - user needs to verify email first
+        console.log('✅ Registration successful:', response.message);
         
         setIsRegistered(true);
         
-        // Redirect to dashboard after 2 seconds
+        // Redirect to email verification page after 1.5 seconds
         setTimeout(() => {
-          navigate('/interns/dashboard');
-        }, 2000);
+          navigate('/verify-email', { state: { email: formData.email } });
+        }, 1500);
       } catch (error: any) {
         setServerError(error.message || 'Registration failed. Please try again.');
       } finally {
@@ -199,20 +198,13 @@ export const StudentRegistrationPage: React.FC = () => {
             <CheckCircle size={40} className="text-green-600" />
           </motion.div>
 
-          <h1 className="text-3xl font-bold text-[#004F4D] mb-4">Welcome to I-Intern!</h1>
+          <h1 className="text-3xl font-bold text-[#004F4D] mb-4">Account Created!</h1>
           <p className="text-gray-600 mb-8 leading-relaxed">
-            Your account has been created successfully. You can now start exploring internship opportunities.
+            Please check your email for a verification code to complete your registration.
           </p>
 
-          <Link to="/login">
-            <motion.button
-              className="w-full bg-[#1F7368] text-white py-4 px-6 rounded-2xl font-semibold shadow-lg hover:bg-[#004F4D] hover:shadow-xl transition-all duration-300"
-              whileHover={{ scale: 1.02 }}
-              whileTap={{ scale: 0.98 }}
-            >
-              Sign In to Your Account
-            </motion.button>
-          </Link>
+          <div className="w-8 h-8 border-4 border-[#1F7368]/30 border-t-[#1F7368] rounded-full animate-spin mx-auto"></div>
+          <p className="text-gray-500 text-sm mt-4">Redirecting to verification page...</p>
         </motion.div>
       </div>
     );
@@ -550,6 +542,17 @@ export const StudentRegistrationPage: React.FC = () => {
                 </a>
               </label>
             </div>
+
+            {/* Server Error Display */}
+            {serverError && (
+              <motion.div
+                className="bg-red-50 border border-red-200 rounded-xl p-4"
+                initial={{ opacity: 0, y: -10 }}
+                animate={{ opacity: 1, y: 0 }}
+              >
+                <p className="text-red-600 text-sm">{serverError}</p>
+              </motion.div>
+            )}
 
             {/* Submit Button */}
             <motion.button
