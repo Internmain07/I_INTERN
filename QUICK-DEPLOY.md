@@ -31,7 +31,7 @@
    ```
    SECRET_KEY = a-very-strong-and-unique-secret-key-for-your-project
    DATABASE_URL = postgresql://neondb_owner:npg_pjSFt3Hqki1W@ep-dawn-pine-a1pod47e-pooler.ap-southeast-1.aws.neon.tech/neondb?sslmode=require
-   ALLOWED_ORIGINS = https://i-intern.com,https://www.i-intern.com
+   SALLOWED_ORIGIN = https://i-intern.com,https://www.i-intern.com
    ENVIRONMENT = production
    ```
 
