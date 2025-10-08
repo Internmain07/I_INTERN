@@ -5,15 +5,13 @@ from sqlalchemy.orm import Session
 from app.schemas.user import UserCreate, User
 from app.schemas.token import Token
 from app.api import deps
-from app.core.security import create_access_token
+from app.core.security import create_access_token, get_password_hash, verify_password
 from app.models.user import User as UserModel
-from passlib.context import CryptContext
 import secrets
 import urllib.parse
 import os
 
 router = APIRouter()
-pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
 
 # OAuth state storage (in production, use Redis or database)
 oauth_states = {}
@@ -72,7 +70,7 @@ def register(user_in: UserCreate, db: Session = Depends(deps.get_db)):
     if db_user:
         raise HTTPException(status_code=400, detail="Email already registered")
 
-    hashed_password = pwd_context.hash(user_in.password)
+    hashed_password = get_password_hash(user_in.password)
     db_user = UserModel(email=user_in.email, hashed_password=hashed_password, role=user_in.role, skills=user_in.skills)
     db.add(db_user)
     db.commit()
@@ -84,7 +82,7 @@ def register(user_in: UserCreate, db: Session = Depends(deps.get_db)):
 @router.post("/login", response_model=Token)
 def login(form_data: OAuth2PasswordRequestForm = Depends(), db: Session = Depends(deps.get_db)):
     user = db.query(UserModel).filter(UserModel.email == form_data.username).first()
-    if not user or not pwd_context.verify(form_data.password, user.hashed_password):
+    if not user or not verify_password(form_data.password, user.hashed_password):
         raise HTTPException(
             status_code=401,
             detail="Incorrect email or password",
