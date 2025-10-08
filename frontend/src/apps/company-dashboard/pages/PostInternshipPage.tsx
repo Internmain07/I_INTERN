@@ -156,10 +156,10 @@ export default function PostInternshipPage() {
 
   return (
     // ... Your existing JSX remains unchanged ...
-    <div className="max-w-4xl mx-auto p-6 bg-white rounded shadow">
-      <h1 className="text-3xl font-bold mb-6 text-gray-900">Post New Internship</h1>
+    <div className="max-w-4xl mx-auto p-6 bg-[#FFFAF3] rounded-xl shadow-md border-2 border-[#63D7C7]">
+      <h1 className="text-3xl font-bold mb-6 text-[#004F4D]">Post New Internship</h1>
       {submitted ? (
-        <div className="text-green-600 font-semibold text-center py-8">
+        <div className="text-[#1F7368] font-semibold text-center py-8 bg-[#63D7C7]/10 rounded-lg border-2 border-[#63D7C7]">
           <div className="text-2xl mb-2">✅ Internship posted successfully!</div>
           <div>Redirecting to dashboard...</div>
         </div>
@@ -167,11 +167,11 @@ export default function PostInternshipPage() {
         <form onSubmit={handleSubmit} className="space-y-8">
           
           {/* Basic Information */}
-          <div className="bg-gray-50 p-6 rounded-lg">
-            <h2 className="text-xl font-semibold mb-4 text-gray-900">Basic Information</h2>
+          <div className="bg-white p-6 rounded-lg border-2 border-[#63D7C7]/30">
+                        <h2 className="text-xl font-semibold mb-4 text-[#004F4D]">Basic Information</h2>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">Internship Title *</label>
+                <label className="block text-sm font-medium text-[#004F4D] mb-2">Internship Title *</label>
                 <input 
                   name="title" 
                   value={form.title} 
@@ -182,7 +182,7 @@ export default function PostInternshipPage() {
                 />
               </div>
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">Company Name *</label>
+                <label className="block text-sm font-medium text-[#004F4D] mb-2">Company Name *</label>
                 <input 
                   name="companyName" 
                   value={form.companyName} 
@@ -193,7 +193,7 @@ export default function PostInternshipPage() {
                 />
               </div>
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">Location *</label>
+                <label className="block text-sm font-medium text-[#004F4D] mb-2">Location *</label>
                 <input 
                   name="location" 
                   value={form.location} 
@@ -204,7 +204,7 @@ export default function PostInternshipPage() {
                 />
               </div>
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">Industry/Category *</label>
+                <label className="block text-sm font-medium text-[#004F4D] mb-2">Industry/Category *</label>
                 <input 
                   name="category" 
                   value={form.category} 
@@ -217,7 +217,7 @@ export default function PostInternshipPage() {
             </div>
             
             <div className="mt-4">
-              <label className="block text-sm font-medium text-gray-700 mb-2">Description *</label>
+              <label className="block text-sm font-medium text-[#004F4D] mb-2">Description *</label>
               <textarea 
                 name="description" 
                 value={form.description} 
@@ -231,11 +231,11 @@ export default function PostInternshipPage() {
           </div>
 
           {/* Job Details */}
-          <div className="bg-gray-50 p-6 rounded-lg">
-            <h2 className="text-xl font-semibold mb-4 text-gray-900">Job Details</h2>
+          <div className="bg-white p-6 rounded-lg border-2 border-[#63D7C7]/30">
+            <h2 className="text-xl font-semibold mb-4 text-[#004F4D]">Job Details</h2>
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">Work Type *</label>
+                <label className="block text-sm font-medium text-[#004F4D] mb-2">Work Type *</label>
                 <select 
                   name="type" 
                   value={form.type} 
@@ -249,7 +249,7 @@ export default function PostInternshipPage() {
                 </select>
               </div>
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">Experience Level *</label>
+                <label className="block text-sm font-medium text-[#004F4D] mb-2">Experience Level *</label>
                 <select 
                   name="level" 
                   value={form.level} 
@@ -263,7 +263,7 @@ export default function PostInternshipPage() {
                 </select>
               </div>
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">Duration *</label>
+                <label className="block text-sm font-medium text-[#004F4D] mb-2">Duration *</label>
                 <input 
                   name="duration" 
                   value={form.duration} 
@@ -274,7 +274,7 @@ export default function PostInternshipPage() {
                 />
               </div>
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">Stipend (₹/month) *</label>
+                <label className="block text-sm font-medium text-[#004F4D] mb-2">Stipend (₹/month) *</label>
                 <input 
                   type="number"
                   name="stipend" 
@@ -286,7 +286,7 @@ export default function PostInternshipPage() {
                 />
               </div>
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">Application Deadline *</label>
+                <label className="block text-sm font-medium text-[#004F4D] mb-2">Application Deadline *</label>
                 <input 
                   type="date"
                   name="deadline" 
@@ -297,7 +297,7 @@ export default function PostInternshipPage() {
                 />
               </div>
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">Company Rating</label>
+                <label className="block text-sm font-medium text-[#004F4D] mb-2">Company Rating</label>
                 <input 
                   type="number"
                   step="0.1"
@@ -314,8 +314,8 @@ export default function PostInternshipPage() {
           </div>
 
           {/* Skills Required */}
-          <div className="bg-gray-50 p-6 rounded-lg">
-            <h2 className="text-xl font-semibold mb-4 text-gray-900">Skills Required</h2>
+          <div className="bg-white p-6 rounded-lg border-2 border-[#63D7C7]/30">
+            <h2 className="text-xl font-semibold mb-4 text-[#004F4D]">Skills Required</h2>
             <div className="flex gap-2 mb-3">
               <input 
                 value={currentSkill} 
@@ -324,13 +324,13 @@ export default function PostInternshipPage() {
                 placeholder="Add a skill (e.g., React, JavaScript)" 
                 className="flex-1 p-3 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-blue-500" 
               />
-              <button type="button" onClick={addSkill} className="bg-blue-600 text-white px-4 py-2 rounded-md hover:bg-blue-700">
-                Add
+              <button type="button" onClick={addSkill} className="bg-[#1F7368] text-white px-4 py-2 rounded-md hover:bg-[#004F4D] transition-colors">
+                Add Skill
               </button>
             </div>
             <div className="flex flex-wrap gap-2">
               {form.skills.map((skill, index) => (
-                <span key={index} className="bg-blue-100 text-blue-800 px-3 py-1 rounded-full text-sm flex items-center gap-1">
+                <span key={index} className="bg-[#63D7C7]/20 text-[#004F4D] px-3 py-1 rounded-full text-sm flex items-center gap-1 border border-[#63D7C7]">
                   {skill}
                   <button type="button" onClick={() => removeSkill(skill)} className="text-blue-600 hover:text-blue-800">×</button>
                 </span>
@@ -339,8 +339,8 @@ export default function PostInternshipPage() {
           </div>
 
           {/* Requirements */}
-          <div className="bg-gray-50 p-6 rounded-lg">
-            <h2 className="text-xl font-semibold mb-4 text-gray-900">Requirements</h2>
+          <div className="bg-white p-6 rounded-lg border-2 border-[#63D7C7]/30">
+            <h2 className="text-xl font-semibold mb-4 text-[#004F4D]">Requirements</h2>
             <div className="flex gap-2 mb-3">
               <input 
                 value={currentRequirement} 
@@ -349,7 +349,7 @@ export default function PostInternshipPage() {
                 placeholder="Add a requirement (e.g., Bachelor's degree in Computer Science)" 
                 className="flex-1 p-3 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-blue-500" 
               />
-              <button type="button" onClick={addRequirement} className="bg-green-600 text-white px-4 py-2 rounded-md hover:bg-green-700">
+              <button type="button" onClick={addRequirement} className="bg-[#1F7368] text-white px-4 py-2 rounded-md hover:bg-[#004F4D] transition-colors">
                 Add
               </button>
             </div>
@@ -364,8 +364,8 @@ export default function PostInternshipPage() {
           </div>
 
           {/* Benefits */}
-          <div className="bg-gray-50 p-6 rounded-lg">
-            <h2 className="text-xl font-semibold mb-4 text-gray-900">Benefits & Perks</h2>
+          <div className="bg-white p-6 rounded-lg border-2 border-[#63D7C7]/30">
+            <h2 className="text-xl font-semibold mb-4 text-[#004F4D]">Benefits & Perks</h2>
             <div className="flex gap-2 mb-3">
               <input 
                 value={currentBenefit} 
@@ -374,7 +374,7 @@ export default function PostInternshipPage() {
                 placeholder="Add a benefit (e.g., Flexible working hours, Learning opportunities)" 
                 className="flex-1 p-3 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-blue-500" 
               />
-              <button type="button" onClick={addBenefit} className="bg-purple-600 text-white px-4 py-2 rounded-md hover:bg-purple-700">
+              <button type="button" onClick={addBenefit} className="bg-[#1F7368] text-white px-4 py-2 rounded-md hover:bg-[#004F4D] transition-colors">
                 Add
               </button>
             </div>
@@ -389,7 +389,7 @@ export default function PostInternshipPage() {
           </div>
 
           {/* Terms and Submit */}
-          <div className="bg-gray-50 p-6 rounded-lg">
+          <div className="bg-white p-6 rounded-lg border-2 border-[#63D7C7]/30">
             <div className="flex items-center gap-3 mb-6">
               <input
                 type="checkbox"
@@ -399,7 +399,7 @@ export default function PostInternshipPage() {
                 className="w-5 h-5 text-blue-600 border-gray-300 rounded focus:ring-blue-500"
                 required
               />
-              <label htmlFor="employer-terms" className="text-sm text-gray-700">
+              <label htmlFor="employer-terms" className="text-sm text-[#004F4D]">
                 I confirm our company agrees to the I-Intern{' '}
                 <a
                   href="/employer-terms"
@@ -416,14 +416,14 @@ export default function PostInternshipPage() {
               <button 
                 type="submit" 
                 disabled={!agreedToEmployerTerms}
-                className="bg-blue-600 text-white px-8 py-3 rounded-md font-semibold hover:bg-blue-700 disabled:opacity-50 disabled:cursor-not-allowed"
+                className="bg-gradient-to-r from-[#1F7368] to-[#004F4D] text-white px-8 py-3 rounded-md font-semibold hover:from-[#004F4D] hover:to-[#003836] disabled:opacity-50 disabled:cursor-not-allowed transition-all"
               >
                 Post Internship
               </button>
               <button 
                 type="button" 
                 onClick={() => navigate('/company/dashboard')}
-                className="bg-gray-300 text-gray-800 px-8 py-3 rounded-md font-semibold hover:bg-gray-400"
+                className="bg-[#FFFAF3] text-[#004F4D] px-8 py-3 rounded-md font-semibold hover:bg-[#63D7C7]/20 border-2 border-[#63D7C7] transition-colors"
               >
                 Cancel
               </button>

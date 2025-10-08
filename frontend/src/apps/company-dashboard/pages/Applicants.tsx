@@ -197,8 +197,8 @@ export const Applicants: React.FC = () => {
             </span>
           </div>
           <div>
-            <div className="font-semibold text-gray-900">{value}</div>
-            <div className="text-sm text-gray-500 flex items-center">
+            <div className="font-semibold text-[#004F4D]">{value}</div>
+            <div className="text-sm text-[#1F7368] flex items-center">
               <Mail className="w-3 h-3 mr-1" />
               {row.canViewContactDetails ? row.email : 'Contact details protected'}
             </div>
@@ -225,7 +225,7 @@ export const Applicants: React.FC = () => {
               {percentage.toFixed(0)}%
             </div>
             {row.matching_skills && row.matching_skills.length > 0 && (
-              <span className="text-xs text-gray-500">
+              <span className="text-xs text-[#1F7368]">
                 ({row.matching_skills.length} skills)
               </span>
             )}
@@ -240,8 +240,8 @@ export const Applicants: React.FC = () => {
       filterable: true,
       render: (value) => (
         <div className="flex items-center">
-          <Briefcase className="w-4 h-4 mr-2 text-gray-400" />
-          <span className="font-medium">{value}</span>
+          <Briefcase className="w-4 h-4 mr-2 text-[#1F7368]" />
+          <span className="font-medium text-[#004F4D]">{value}</span>
         </div>
       ),
     },
@@ -253,13 +253,13 @@ export const Applicants: React.FC = () => {
           {value.slice(0, 2).map((skill: string, index: number) => (
             <span
               key={index}
-              className="inline-flex items-center px-2 py-1 rounded-full text-xs bg-teal-50 text-teal-700 border border-teal-200"
+              className="inline-flex items-center px-2 py-1 rounded-full text-xs bg-[#63D7C7]/20 text-[#004F4D] border border-[#63D7C7]"
             >
               {skill}
             </span>
           ))}
           {value.length > 2 && (
-            <span className="inline-flex items-center px-2 py-1 rounded-full text-xs bg-gray-100 text-gray-600">
+            <span className="inline-flex items-center px-2 py-1 rounded-full text-xs bg-[#FFFAF3] text-[#1F7368] border border-[#63D7C7]">
               +{value.length - 2}
             </span>
           )}
@@ -273,8 +273,8 @@ export const Applicants: React.FC = () => {
       filterable: true,
       render: (value) => (
         <div className="flex items-center">
-          <GraduationCap className="w-4 h-4 mr-2 text-gray-400" />
-          <span className="text-sm">{value}</span>
+          <GraduationCap className="w-4 h-4 mr-2 text-[#1F7368]" />
+          <span className="text-sm text-[#004F4D]">{value}</span>
         </div>
       ),
     },
@@ -294,8 +294,8 @@ export const Applicants: React.FC = () => {
       header: 'Applied Date',
       sortable: true,
       render: (value) => (
-        <div className="flex items-center text-sm">
-          <Clock className="w-3 h-3 mr-1 text-gray-400" />
+        <div className="flex items-center text-sm text-[#004F4D]">
+          <Clock className="w-3 h-3 mr-1 text-[#1F7368]" />
           {formatDate(value)}
         </div>
       ),
@@ -368,14 +368,14 @@ export const Applicants: React.FC = () => {
         transition={{ delay: 0.2 }}
         className="grid grid-cols-1 md:grid-cols-4 gap-6"
       >
-        <Card className="p-4">
+        <Card className="p-4 bg-[#FFFAF3] border-2 border-[#63D7C7]">
           <CardContent className="p-0">
             <div className="flex items-center space-x-3">
               <div className="p-2 bg-[#63D7C7]/20 rounded-lg">
                 <Users className="w-5 h-5 text-[#1F7368]" />
               </div>
               <div>
-                <p className="text-sm font-medium text-gray-600">Total</p>
+                <p className="text-sm font-medium text-[#1F7368]">Total</p>
                 <p className="text-2xl font-bold text-[#004F4D]">
                   {applicants.length}
                 </p>
@@ -384,14 +384,14 @@ export const Applicants: React.FC = () => {
           </CardContent>
         </Card>
 
-        <Card className="p-4">
+        <Card className="p-4 bg-[#FFFAF3] border-2 border-[#63D7C7]">
           <CardContent className="p-0">
             <div className="flex items-center space-x-3">
               <div className="p-2 bg-[#FFFAF3] rounded-lg">
                 <Clock className="w-5 h-5 text-[#1F7368]" />
               </div>
               <div>
-                <p className="text-sm font-medium text-gray-600">Pending</p>
+                <p className="text-sm font-medium text-[#1F7368]">Pending</p>
                 <p className="text-2xl font-bold text-[#004F4D]">
                   {statusStats['Pending'] || 0}
                 </p>
@@ -400,14 +400,14 @@ export const Applicants: React.FC = () => {
           </CardContent>
         </Card>
 
-        <Card className="p-4">
+        <Card className="p-4 bg-[#FFFAF3] border-2 border-[#63D7C7]">
           <CardContent className="p-0">
             <div className="flex items-center space-x-3">
               <div className="p-2 bg-[#1F7368]/20 rounded-lg">
                 <Eye className="w-5 h-5 text-[#004F4D]" />
               </div>
               <div>
-                <p className="text-sm font-medium text-gray-600">Under Review</p>
+                <p className="text-sm font-medium text-[#1F7368]">Under Review</p>
                 <p className="text-2xl font-bold text-[#004F4D]">
                   {statusStats['Under Review'] || 0}
                 </p>
@@ -416,14 +416,14 @@ export const Applicants: React.FC = () => {
           </CardContent>
         </Card>
 
-        <Card className="p-4">
+        <Card className="p-4 bg-[#FFFAF3] border-2 border-[#63D7C7]">
           <CardContent className="p-0">
             <div className="flex items-center space-x-3">
               <div className="p-2 bg-[#004F4D]/10 rounded-lg">
                 <UserCheck className="w-5 h-5 text-[#004F4D]" />
               </div>
               <div>
-                <p className="text-sm font-medium text-gray-600">Hired</p>
+                <p className="text-sm font-medium text-[#1F7368]">Hired</p>
                 <p className="text-2xl font-bold text-[#004F4D]">
                   {statusStats['Hired'] || 0}
                 </p>

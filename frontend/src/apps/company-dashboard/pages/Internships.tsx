@@ -114,7 +114,7 @@ export const Internships: React.FC = () => {
   const handleBulkDelete = async (selectedInternships: Internship[]) => {
     for (const internship of selectedInternships) {
       try {
-        const response = await fetch(`http://localhost:8000/api/v1/internships/${internship.id}`, {
+  const response = await fetch(`${API_URL}/api/v1/internships/${internship.id}`, {
           method: 'DELETE',
           headers: {
             'Authorization': `Bearer ${token}`
@@ -310,7 +310,7 @@ export const Internships: React.FC = () => {
         transition={{ delay: 0.2 }}
         className="grid grid-cols-1 md:grid-cols-3 gap-6"
       >
-        <Card className="p-4">
+        <Card className="p-4 bg-[#FFFAF3] border-2 border-[#63D7C7]">
           <CardContent className="p-0">
             <div className="flex items-center space-x-3">
               <div className="p-2 bg-[#63D7C7]/20 rounded-lg">
@@ -326,7 +326,7 @@ export const Internships: React.FC = () => {
           </CardContent>
         </Card>
 
-        <Card className="p-4">
+        <Card className="p-4 bg-[#FFFAF3] border-2 border-[#63D7C7]">
           <CardContent className="p-0">
             <div className="flex items-center space-x-3">
               <div className="p-2 bg-[#1F7368]/20 rounded-lg">
@@ -342,7 +342,7 @@ export const Internships: React.FC = () => {
           </CardContent>
         </Card>
 
-        <Card className="p-4">
+        <Card className="p-4 bg-[#FFFAF3] border-2 border-[#63D7C7]">
           <CardContent className="p-0">
             <div className="flex items-center space-x-3">
               <div className="p-2 bg-[#004F4D]/10 rounded-lg">

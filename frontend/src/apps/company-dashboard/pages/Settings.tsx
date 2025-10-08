@@ -874,7 +874,7 @@ export const Settings: React.FC = () => {
             { role: 'HR Manager', permissions: ['Post Jobs', 'Review Applications', 'Interview'] },
             { role: 'Recruiter', permissions: ['Review Applications', 'Schedule Interviews'] }
           ].map((role, index) => (
-            <Card key={index} className="p-4">
+            <Card key={index} className="p-4 bg-[#FFFAF3] border-2 border-[#63D7C7]">
               <CardHeader className="p-0 mb-3">
                 <CardTitle className="text-lg">{role.role}</CardTitle>
               </CardHeader>
@@ -906,7 +906,7 @@ export const Settings: React.FC = () => {
             { title: 'Video Tutorials', icon: Globe },
             { title: 'API Documentation', icon: FileText }
           ].map((item, index) => (
-            <Card key={index} className="p-4 hover:shadow-md transition-shadow cursor-pointer">
+            <Card key={index} className="p-4 bg-[#FFFAF3] border-2 border-[#63D7C7] hover:shadow-md transition-shadow cursor-pointer">
               <CardContent className="p-0">
                 <div className="flex items-center space-x-3">
                   <item.icon className="w-5 h-5 text-teal-600" />
@@ -1211,12 +1211,12 @@ export const Settings: React.FC = () => {
   );
 
   return (
-    <div className="p-6 space-y-6 bg-gradient-to-br from-[#FFFAF3] to-[#F5F1E9] min-h-screen">
+    <div className="p-6 space-y-6">
       {/* Header */}
       <motion.div
         initial={{ opacity: 0, y: -20 }}
         animate={{ opacity: 1, y: 0 }}
-        className="bg-white rounded-xl shadow-sm border border-[#63D7C7]/30 p-6"
+        className="bg-[#FFFAF3] rounded-xl shadow-sm border-2 border-[#63D7C7] p-6"
       >
         <div className="flex items-center space-x-3">
           <SettingsIcon className="w-8 h-8 text-[#1F7368]" />
@@ -1230,7 +1230,7 @@ export const Settings: React.FC = () => {
       </motion.div>
 
       {isLoading ? (
-        <Card className="p-6">
+        <Card className="p-6 bg-[#FFFAF3] border-2 border-[#63D7C7]">
           <div className="flex items-center justify-center py-12">
             <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-[#1F7368]"></div>
           </div>
@@ -1239,7 +1239,7 @@ export const Settings: React.FC = () => {
         <div className="grid grid-cols-1 lg:grid-cols-4 gap-6">
         {/* Sidebar */}
         <div className="lg:col-span-1">
-          <Card className="p-4">
+          <Card className="p-4 bg-[#FFFAF3] border-2 border-[#63D7C7]">
             <nav className="space-y-2">
               {settingsSections.map((section) => {
                 const Icon = section.icon;
@@ -1264,7 +1264,7 @@ export const Settings: React.FC = () => {
 
         {/* Main Content */}
         <div className="lg:col-span-3">
-          <Card className="p-6">
+          <Card className="p-6 bg-[#FFFAF3] border-2 border-[#63D7C7]">
             <motion.div
               key={activeSection}
               initial={{ opacity: 0, y: 20 }}

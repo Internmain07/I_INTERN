@@ -296,7 +296,7 @@ export const Dashboard: React.FC = () => {
             animate={{ opacity: 1, x: 0 }}
             transition={{ delay: 0.8 }}
           >
-            <Card className="p-6 bg-gradient-to-br from-[#FFFAF3] to-[#F0EDE6] border-[#63D7C7]/30">
+            <Card className="p-6 bg-[#FFFAF3] border-2 border-[#63D7C7]">
               <CardContent className="p-0">
                 <div className="flex items-center justify-between">
                   <div>
@@ -329,7 +329,7 @@ export const Dashboard: React.FC = () => {
             animate={{ opacity: 1, x: 0 }}
             transition={{ delay: 0.9 }}
           >
-            <Card className="p-6">
+            <Card className="p-6 bg-[#FFFAF3] border-2 border-[#63D7C7]">
               <CardHeader className="p-0 mb-4">
                 <div className="flex items-center justify-between">
                   <CardTitle className="text-xl text-[#004F4D]">Active Internships</CardTitle>
@@ -359,7 +359,7 @@ export const Dashboard: React.FC = () => {
             animate={{ opacity: 1, x: 0 }}
             transition={{ delay: 1.0 }}
           >
-            <Card className="p-6 bg-gradient-to-br from-[#FFFAF3] to-[#F5F1E9] border-[#63D7C7]/30">
+            <Card className="p-6 bg-[#FFFAF3] border-2 border-[#63D7C7]">
               <CardContent className="p-0">
                 <div className="flex items-center space-x-4">
                   <div className="w-12 h-12 bg-gradient-to-br from-[#63D7C7] to-[#1F7368] rounded-lg flex items-center justify-center">
@@ -427,7 +427,7 @@ export const Dashboard: React.FC = () => {
             animate={{ opacity: 1, x: 0 }}
             transition={{ delay: 0.9 }}
           >
-            <Card className="p-6">
+            <Card className="p-6 bg-[#FFFAF3] border-2 border-[#63D7C7]">
               <CardHeader className="p-0 mb-4">
                 <div className="flex items-center justify-between">
                   <CardTitle className="text-xl text-[#004F4D]">Recent Applicants</CardTitle>

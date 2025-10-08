@@ -67,7 +67,7 @@ export const Sidebar: React.FC<SidebarProps> = ({ isCollapsed, onToggle }) => {
 
   return (
     <motion.div
-      className="flex flex-col h-full bg-white border-r border-gray-200 shadow-sm"
+      className="flex flex-col h-full bg-[#FFFAF3] border-r-2 border-[#63D7C7] shadow-sm"
       animate={{
         width: isCollapsed ? 80 : 256,
       }}
@@ -77,7 +77,7 @@ export const Sidebar: React.FC<SidebarProps> = ({ isCollapsed, onToggle }) => {
       }}
     >
       {/* Header */}
-      <div className="flex items-center justify-between p-4 border-b border-gray-200">
+      <div className="flex items-center justify-between p-4 border-b-2 border-[#63D7C7]">
         <AnimatePresence mode="wait">
           {!isCollapsed && (
             <motion.div
@@ -100,12 +100,12 @@ export const Sidebar: React.FC<SidebarProps> = ({ isCollapsed, onToggle }) => {
         
         <button
           onClick={onToggle}
-          className="p-2 rounded-lg hover:bg-gray-100 transition-colors"
+          className="p-2 rounded-lg hover:bg-[#63D7C7]/20 transition-colors"
         >
           {isCollapsed ? (
-            <ChevronRight className="w-4 h-4 text-gray-500" />
+            <ChevronRight className="w-4 h-4 text-[#1F7368]" />
           ) : (
-            <ChevronLeft className="w-4 h-4 text-gray-500" />
+            <ChevronLeft className="w-4 h-4 text-[#1F7368]" />
           )}
         </button>
       </div>
@@ -123,8 +123,8 @@ export const Sidebar: React.FC<SidebarProps> = ({ isCollapsed, onToggle }) => {
               className={cn(
                 "flex items-center px-3 py-2 rounded-lg text-sm font-medium transition-colors",
                 isActive
-                  ? "bg-gradient-to-r from-[#FFFAF3] to-[#F0EDE6] text-[#004F4D] border-r-2 border-[#1F7368]"
-                  : "text-gray-600 hover:text-[#1F7368] hover:bg-[#FFFAF3]"
+                  ? "bg-gradient-to-r from-[#63D7C7] to-[#1F7368] text-white shadow-md"
+                  : "text-[#004F4D] hover:text-white hover:bg-[#1F7368]/80"
               )}
             >
               <Icon className="w-5 h-5 flex-shrink-0" />
@@ -154,9 +154,9 @@ export const Sidebar: React.FC<SidebarProps> = ({ isCollapsed, onToggle }) => {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: 20 }}
-            className="p-4 border-t border-gray-200"
+            className="p-4 border-t-2 border-[#63D7C7]"
           >
-            <div className="bg-gradient-to-br from-[#FFFAF3] to-[#F0EDE6] rounded-xl p-4 border border-[#63D7C7]/30">
+            <div className="bg-gradient-to-br from-[#FFFAF3] to-[#F0EDE6] rounded-xl p-4 border-2 border-[#63D7C7]">
               <div className="flex items-center space-x-3 mb-3">
                 <div className="w-8 h-8 bg-gradient-to-br from-[#63D7C7] to-[#1F7368] rounded-lg flex items-center justify-center">
                   <Crown className="w-4 h-4 text-white" />
@@ -199,7 +199,7 @@ export const Sidebar: React.FC<SidebarProps> = ({ isCollapsed, onToggle }) => {
           exit={{ opacity: 0 }}
           className="p-4"
         >
-          <div className="text-xs text-gray-500 text-center">
+          <div className="text-xs text-[#1F7368] text-center">
             InternHub Dashboard v2.0
           </div>
         </motion.div>

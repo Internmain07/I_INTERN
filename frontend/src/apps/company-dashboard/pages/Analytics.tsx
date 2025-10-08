@@ -86,12 +86,12 @@ export const Analytics: React.FC = () => {
   }
 
   return (
-    <div className="p-6 space-y-8 bg-gradient-to-br from-[#FFFAF3] to-[#F5F1E9] min-h-screen">
+    <div className="p-6 space-y-8">
       {/* Header */}
       <motion.div
         initial={{ opacity: 0, y: -20 }}
         animate={{ opacity: 1, y: 0 }}
-        className="bg-white rounded-xl shadow-sm border border-[#63D7C7]/30 p-6"
+        className="bg-[#FFFAF3] rounded-xl shadow-sm border-2 border-[#63D7C7] p-6"
       >
         <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between">
           <div>
@@ -173,7 +173,7 @@ export const Analytics: React.FC = () => {
           initial={{ opacity: 0, x: -20 }}
           animate={{ opacity: 1, x: 0 }}
           transition={{ delay: 0.2 }}
-          className="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden"
+          className="bg-[#FFFAF3] rounded-xl shadow-sm border-2 border-[#63D7C7] overflow-hidden"
         >
           <MonthlyApplicationsChart data={monthlyData.length > 0 ? monthlyData : monthlyApplicationsData} />
         </motion.div>
@@ -182,7 +182,7 @@ export const Analytics: React.FC = () => {
           initial={{ opacity: 0, x: 20 }}
           animate={{ opacity: 1, x: 0 }}
           transition={{ delay: 0.3 }}
-          className="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden"
+          className="bg-[#FFFAF3] rounded-xl shadow-sm border-2 border-[#63D7C7] overflow-hidden"
         >
           <HiringFunnelChart data={funnelData || hiringFunnelData} />
         </motion.div>
@@ -194,9 +194,9 @@ export const Analytics: React.FC = () => {
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.4 }}
-          className="bg-white rounded-xl shadow-sm border border-gray-200"
+          className="bg-[#FFFAF3] rounded-xl shadow-sm border-2 border-[#63D7C7]"
         >
-          <Card className="border-0 shadow-none">
+          <Card className="border-0 shadow-none bg-transparent">
             <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
               <CardTitle className="text-sm font-medium">Application Sources</CardTitle>
               <PieChart className="w-4 h-4 text-muted-foreground" />
@@ -233,9 +233,9 @@ export const Analytics: React.FC = () => {
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.5 }}
-          className="bg-white rounded-xl shadow-sm border border-gray-200"
+          className="bg-[#FFFAF3] rounded-xl shadow-sm border-2 border-[#63D7C7]"
         >
-          <Card className="border-0 shadow-none">
+          <Card className="border-0 shadow-none bg-transparent">
             <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
               <CardTitle className="text-sm font-medium">Top Skills Requested</CardTitle>
               <BarChart3 className="w-4 h-4 text-muted-foreground" />
@@ -278,9 +278,9 @@ export const Analytics: React.FC = () => {
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.6 }}
-          className="bg-white rounded-xl shadow-sm border border-gray-200"
+          className="bg-[#FFFAF3] rounded-xl shadow-sm border-2 border-[#63D7C7]"
         >
-          <Card className="border-0 shadow-none">
+          <Card className="border-0 shadow-none bg-transparent">
             <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
               <CardTitle className="text-sm font-medium">Conversion Rates</CardTitle>
               <TrendingUp className="w-4 h-4 text-muted-foreground" />

@@ -126,11 +126,11 @@ export const EditInternshipPage: React.FC = () => {
 
   if (!internship) {
     return (
-      <div className="min-h-screen bg-gray-50 flex items-center justify-center">
-        <div className="text-center">
-          <h2 className="text-2xl font-bold text-gray-900 mb-4">Internship Not Found</h2>
-          <p className="text-gray-600 mb-6">The internship you're trying to edit doesn't exist.</p>
-          <Button onClick={() => navigate('/company/internships')}>
+      <div className="min-h-screen flex items-center justify-center">
+        <div className="text-center bg-[#FFFAF3] p-8 rounded-xl border-2 border-[#63D7C7]">
+          <h2 className="text-2xl font-bold text-[#004F4D] mb-4">Internship Not Found</h2>
+          <p className="text-[#1F7368] mb-6">The internship you're trying to edit doesn't exist.</p>
+          <Button onClick={() => navigate('/company/internships')} className="bg-[#1F7368] hover:bg-[#004F4D]">
             <ArrowLeft className="w-4 h-4 mr-2" />
             Back to Internships
           </Button>
@@ -140,7 +140,7 @@ export const EditInternshipPage: React.FC = () => {
   }
 
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className="min-h-screen">
       <div className="container mx-auto px-4 py-8">
         {/* Header */}
         <motion.div

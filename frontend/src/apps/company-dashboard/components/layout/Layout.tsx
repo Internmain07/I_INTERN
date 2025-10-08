@@ -7,7 +7,7 @@ export const Layout: React.FC = () => {
   const [isSidebarCollapsed, setIsSidebarCollapsed] = useState(false);
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-[#FFFAF3] to-[#F5F1E9] flex">
+    <div className="min-h-screen bg-gradient-to-br from-[#004F4D] to-[#1F7368] flex">
       {/* Sidebar */}
       <div className="flex-shrink-0">
         <Sidebar
