@@ -1,15 +1,14 @@
 fastapi==0.104.1
 uvicorn[standard]==0.24.0
 jinja2==3.1.2
-pydantic[email]==2.5.2  
+pydantic==2.5.2
 python-multipart==0.0.6
 sqlalchemy==2.0.23
-passlib[bcrypt]==1.7.4
-python-jose[cryptography]==3.3.0
+passlib==1.7.4
+bcrypt==4.1.1
+python-jose==3.3.0
+cryptography==41.0.7
 psycopg2-binary==2.9.9
 pydantic-settings==2.1.0
-bcrypt==4.1.1
-# PDF generation - using xhtml2pdf which is pure Python (no Rust needed)
 xhtml2pdf==0.2.13
-# Alternative: reportlab==4.0.7 (if xhtml2pdf doesn't work)
 
