@@ -1,4 +1,4 @@
-from fastapi import APIRouter, Depends, HTTPException, Request, Response
+from fastapi import APIRouter, Depends, HTTPException, Request, Response, BackgroundTasks
 from fastapi.security import OAuth2PasswordRequestForm
 from fastapi.responses import RedirectResponse
 from sqlalchemy.orm import Session
@@ -33,6 +33,40 @@ oauth_states = {}
 
 # Get backend URL from environment variable
 BACKEND_URL = os.getenv("BACKEND_URL", "http://localhost:8000")
+
+# Background task functions for sending emails
+def background_send_verification_email(email: str, otp: str):
+    """Background task to send verification email"""
+    try:
+        result = send_email_verification_otp(email, otp)
+        if result:
+            print(f"✅ Background: Verification email sent to {email}")
+        else:
+            print(f"❌ Background: Failed to send verification email to {email}")
+    except Exception as e:
+        print(f"❌ Background: Error sending verification email to {email}: {str(e)}")
+
+def background_send_password_reset(email: str, otp: str):
+    """Background task to send password reset email"""
+    try:
+        result = send_password_reset_email(email, otp)
+        if result:
+            print(f"✅ Background: Password reset email sent to {email}")
+        else:
+            print(f"❌ Background: Failed to send password reset email to {email}")
+    except Exception as e:
+        print(f"❌ Background: Error sending password reset email to {email}: {str(e)}")
+
+def background_send_welcome(email: str, role: str, name: str = None):
+    """Background task to send welcome email"""
+    try:
+        result = send_welcome_email(email, role, name)
+        if result:
+            print(f"✅ Background: Welcome email sent to {email}")
+        else:
+            print(f"❌ Background: Failed to send welcome email to {email}")
+    except Exception as e:
+        print(f"❌ Background: Error sending welcome email to {email}: {str(e)}")
 
 # Google OAuth endpoints - Currently disabled
 # To enable: Set GOOGLE_CLIENT_ID and GOOGLE_CLIENT_SECRET in environment variables
@@ -90,10 +124,15 @@ BACKEND_URL = os.getenv("BACKEND_URL", "http://localhost:8000")
 #     return RedirectResponse(url=f"{frontend_url}/login?error=google_oauth_incomplete")
 
 @router.post("/register", response_model=EmailVerificationResponse)
-def register(user_in: UserCreate, db: Session = Depends(deps.get_db)):
+def register(
+    user_in: UserCreate, 
+    background_tasks: BackgroundTasks,
+    db: Session = Depends(deps.get_db)
+):
     """
     Register a new user and send email verification OTP.
     User must verify email before they can login.
+    Email is sent in background to avoid blocking the API response.
     """
     db_user = db.query(UserModel).filter(UserModel.email == user_in.email).first()
     if db_user:
@@ -120,15 +159,11 @@ def register(user_in: UserCreate, db: Session = Depends(deps.get_db)):
     db.commit()
     db.refresh(db_user)
 
-    # Send verification email with OTP
-    try:
-        send_email_verification_otp(db_user.email, verification_otp)
-    except Exception as e:
-        print(f"Failed to send verification email: {str(e)}")
-        # Don't fail registration if email fails - user can request new OTP
+    # Send verification email in background (non-blocking)
+    background_tasks.add_task(background_send_verification_email, db_user.email, verification_otp)
 
     return EmailVerificationResponse(
-        message="Account created successfully. Please check your email for verification OTP.",
+        message="Account created successfully. Please check your email for verification OTP (may take a few moments to arrive).",
         email=db_user.email,
         email_verified=False
     )
@@ -187,11 +222,13 @@ def logout(response: Response):
 @router.post("/forgot-password", response_model=PasswordResetResponse)
 def forgot_password(
     reset_request: PasswordResetRequest,
+    background_tasks: BackgroundTasks,
     db: Session = Depends(deps.get_db)
 ):
     """
     Request a password reset. Sends an email with a 6-digit OTP.
     Returns success even if email doesn't exist (for security).
+    Email is sent in background to avoid blocking the API response.
     """
     user = db.query(UserModel).filter(UserModel.email == reset_request.email).first()
     
@@ -207,12 +244,8 @@ def forgot_password(
         user.reset_otp_expires = expires_at
         db.commit()
         
-        # Send password reset email with OTP
-        try:
-            send_password_reset_email(user.email, reset_otp)
-        except Exception as e:
-            print(f"Failed to send email: {str(e)}")
-            # Don't fail the request if email fails
+        # Send password reset email in background (non-blocking)
+        background_tasks.add_task(background_send_password_reset, user.email, reset_otp)
     
     # Always return success message (security best practice)
     return PasswordResetResponse(
@@ -294,11 +327,13 @@ def reset_password(
 @router.post("/send-verification-otp", response_model=EmailVerificationResponse)
 def send_verification_otp(
     request: SendVerificationOTPRequest,
+    background_tasks: BackgroundTasks,
     db: Session = Depends(deps.get_db)
 ):
     """
     Send an email verification OTP to the user's email address.
     This can be used for new users or users who need to re-verify their email.
+    Email is sent in background to avoid blocking the API response.
     """
     user = db.query(UserModel).filter(UserModel.email == request.email).first()
     
@@ -324,15 +359,11 @@ def send_verification_otp(
     user.email_verification_otp_expires = expires_at
     db.commit()
     
-    # Send verification email with OTP
-    try:
-        send_email_verification_otp(user.email, verification_otp)
-    except Exception as e:
-        print(f"Failed to send email: {str(e)}")
-        # Don't fail the request if email fails
+    # Send verification email in background (non-blocking)
+    background_tasks.add_task(background_send_verification_email, user.email, verification_otp)
     
     return EmailVerificationResponse(
-        message="Verification OTP has been sent to your email",
+        message="Verification OTP has been sent to your email (may take a few moments to arrive)",
         email=user.email,
         email_verified=False
     )
@@ -342,11 +373,13 @@ def send_verification_otp(
 def verify_email(
     response: Response,
     request: VerifyEmailRequest,
+    background_tasks: BackgroundTasks,
     db: Session = Depends(deps.get_db)
 ):
     """
     Verify email using OTP and return access token.
     This completes the registration process.
+    Welcome email is sent in background.
     """
     user = db.query(UserModel).filter(UserModel.email == request.email).first()
     
@@ -389,12 +422,8 @@ def verify_email(
     user.email_verification_otp_expires = None
     db.commit()
     
-    # Send welcome email after successful verification
-    try:
-        send_welcome_email(user.email, user.role, user.name)
-    except Exception as e:
-        print(f"Failed to send welcome email: {str(e)}")
-        # Don't fail the verification if welcome email fails
+    # Send welcome email in background (non-blocking)
+    background_tasks.add_task(background_send_welcome, user.email, user.role, user.name)
     
     # Generate access token for the user
     access_token = create_access_token(subject=user.email)

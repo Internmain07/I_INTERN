@@ -3,7 +3,12 @@ from email.mime.text import MIMEText
 from email.mime.multipart import MIMEMultipart
 from typing import Optional
 import os
+import logging
 from app.core.config import settings
+
+# Configure logging
+logging.basicConfig(level=logging.INFO)
+logger = logging.getLogger(__name__)
 
 def send_email(
     to_email: str,
@@ -12,7 +17,7 @@ def send_email(
     html_body: Optional[str] = None
 ) -> bool:
     """
-    Send an email using SMTP
+    Send an email using SMTP with proper error handling and timeouts
     
     Args:
         to_email: Recipient email address
@@ -31,12 +36,20 @@ def send_email(
         smtp_password = getattr(settings, 'SMTP_PASSWORD', None)
         from_email = getattr(settings, 'FROM_EMAIL', smtp_username)
         
+        # Check if email is configured
         if not smtp_username or not smtp_password:
-            print("Email configuration not set. Email not sent.")
-            print(f"Would send email to: {to_email}")
-            print(f"Subject: {subject}")
-            print(f"Body: {body}")
-            return True  # Return True in development mode
+            error_msg = f"❌ EMAIL NOT CONFIGURED! SMTP credentials missing. Cannot send email to {to_email}"
+            logger.error(error_msg)
+            logger.info(f"Subject: {subject}")
+            logger.info(f"Body preview: {body[:100]}...")
+            
+            # In development mode only, return True to allow testing
+            if getattr(settings, 'ENVIRONMENT', 'development') == 'development':
+                logger.warning("⚠️ Running in development mode - allowing operation without email")
+                return True
+            
+            # In production, this is a critical error
+            return False
         
         # Create message
         message = MIMEMultipart('alternative')
@@ -53,21 +66,44 @@ def send_email(
             html_part = MIMEText(html_body, 'html')
             message.attach(html_part)
         
-        # Send email
-        with smtplib.SMTP(smtp_server, smtp_port) as server:
+        # Send email with timeout to prevent hanging
+        logger.info(f"📧 Attempting to send email to {to_email}...")
+        
+        with smtplib.SMTP(smtp_server, smtp_port, timeout=30) as server:
+            server.set_debuglevel(0)  # Set to 1 for debug output
+            
+            # Start TLS encryption
+            logger.info("🔐 Starting TLS encryption...")
             server.starttls()
+            
+            # Login to SMTP server
+            logger.info("🔑 Logging in to SMTP server...")
             server.login(smtp_username, smtp_password)
+            
+            # Send the email
+            logger.info("📤 Sending email...")
             server.send_message(message)
         
-        print(f"Email sent successfully to {to_email}")
+        logger.info(f"✅ Email sent successfully to {to_email}")
         return True
         
+    except smtplib.SMTPAuthenticationError as e:
+        logger.error(f"❌ SMTP Authentication failed: {str(e)}")
+        logger.error("Check your SMTP username and password (App Password for Gmail)")
+        return False
+    
+    except smtplib.SMTPException as e:
+        logger.error(f"❌ SMTP Error occurred: {str(e)}")
+        return False
+    
+    except TimeoutError as e:
+        logger.error(f"❌ Email sending timed out: {str(e)}")
+        logger.error("SMTP server may be unreachable or blocked by firewall")
+        return False
+    
     except Exception as e:
-        print(f"Failed to send email: {str(e)}")
-        # In development, print the email content
-        print(f"Would send email to: {to_email}")
-        print(f"Subject: {subject}")
-        print(f"Body: {body}")
+        logger.error(f"❌ Unexpected error sending email: {type(e).__name__}: {str(e)}")
+        logger.error(f"Target: {to_email}, Subject: {subject}")
         return False
 
 
