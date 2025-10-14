@@ -22,7 +22,7 @@ services:
       - key: FRONTEND_URL
         value: https://i-intern-2.onrender.com
       - key: BACKEND_URL
-        sync: false  # Set to your actual backend URL like https://i-intern-api.onrender.com
+        value: https://i-intern.onrender.com
       
       # Cookie configuration (required for secure authentication)
       - key: COOKIE_SAMESITE
@@ -30,7 +30,10 @@ services:
       - key: COOKIE_SECURE
         value: true
       - key: COOKIE_DOMAIN
-        value: .onrender.com
+        # If you use the custom domain (i-intern.com) for the frontend, set COOKIE_DOMAIN to
+        # ".i-intern.com" so cookies can be shared on that domain. If you only use render subdomains,
+        # use ".onrender.com". Adjust as needed for your deployment.
+        value: .i-intern.com
       - key: COOKIE_HTTPONLY
         value: true
       - key: COOKIE_MAX_AGE

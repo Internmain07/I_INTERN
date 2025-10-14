@@ -6,9 +6,10 @@ from app.db.base import Base
 from app.db.session import engine
 from fastapi.middleware.cors import CORSMiddleware
 from pathlib import Path
+from app.core.config import settings
 
-# Get environment
-ENVIRONMENT = os.getenv("ENVIRONMENT", "development")
+# Get environment (prefer central settings)
+ENVIRONMENT = getattr(settings, "ENVIRONMENT", os.getenv("ENVIRONMENT", "development"))
 
 Base.metadata.create_all(bind=engine)
 
@@ -23,8 +24,8 @@ app = FastAPI(
 # ===========================
 # CORS CONFIGURATION - MUST BE FIRST!
 # ===========================
-# Get allowed origins from environment variable or use defaults
-ALLOWED_ORIGINS_ENV = os.getenv("ALLOWED_ORIGINS", "")
+# Get allowed origins from central settings or environment variable
+ALLOWED_ORIGINS_ENV = getattr(settings, "ALLOWED_ORIGINS", os.getenv("ALLOWED_ORIGINS", "")) or ""
 
 # Default origins for development - Allow common development ports
 dev_origins = [
@@ -53,7 +54,7 @@ prod_origins = [
     "https://www.i-intern.com",
     "http://www.i-intern.com",
     "https://i-intern-2.onrender.com",
-    "https://i-intern-api.onrender.com",  # Backend URL for cookie domain
+    "https://i-intern.onrender.com",  # Backend URL for cookie domain
 ]
 
 # Build origins list

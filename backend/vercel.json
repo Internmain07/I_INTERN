@@ -15,6 +15,8 @@
   "env": {
     "SECRET_KEY": "@secret_key",
     "DATABASE_URL": "@database_url",
-    "ALLOWED_ORIGINS": "https://i-intern.com,https://www.i-intern.com"
+    "ALLOWED_ORIGINS": "https://i-intern-2.onrender.com,https://i-intern.com",
+    "FRONTEND_URL": "https://i-intern-2.onrender.com,https://i-intern.com",
+    "BACKEND_URL": "https://i-intern.onrender.com"
   }
 }
