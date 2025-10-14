@@ -9,7 +9,7 @@ Environment variables
 - FRONTEND_URL: used by email templates and some redirects; not used directly by the CORS middleware but should be set so links in emails point to the correct frontend.
 
 Deployment notes
-- Render: in `render.yaml` `ALLOWED_ORIGINS` and `FRONTEND_URL` are already present in the example. Ensure `ENVIRONMENT` is set to `production` on the Render dashboard, and set `COOKIE_SECURE` to `true`.
+- Render: in `render.yaml` `ALLOWED_ORIGINS` and `FRONTEND_URL` are already present in the example. This project is configured to use Render-hosted subdomains in production by default. `COOKIE_DOMAIN` is set to `.onrender.com` so cookies will be available across Render subdomains (e.g. `i-intern-2.onrender.com` and `i-intern.onrender.com`). Ensure `ENVIRONMENT` is set to `production` on the Render dashboard, and set `COOKIE_SECURE` to `true`.
 - Vercel: in `vercel.json` set `ALLOWED_ORIGINS` to your frontend origin(s) and configure environment variables in the Vercel dashboard.
 
 Testing CORS locally

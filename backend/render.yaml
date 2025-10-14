@@ -30,10 +30,9 @@ services:
       - key: COOKIE_SECURE
         value: true
       - key: COOKIE_DOMAIN
-        # If you use the custom domain (i-intern.com) for the frontend, set COOKIE_DOMAIN to
-        # ".i-intern.com" so cookies can be shared on that domain. If you only use render subdomains,
-        # use ".onrender.com". Adjust as needed for your deployment.
-        value: .i-intern.com
+        # Using Render subdomains in production; set cookie domain to the Render parent
+        # so cookies are available across Render-hosted subdomains (e.g. i-intern-2.onrender.com).
+        value: .onrender.com
       - key: COOKIE_HTTPONLY
         value: true
       - key: COOKIE_MAX_AGE
